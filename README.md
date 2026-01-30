@@ -420,3 +420,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [⬆️ Back to Top](#-smart-hospital-management-ecosystem)
 
 </div>
+=======
+# Smart-Hospital-Management-Ecosystem
+>>>>>>> fc536b19811119b95e70d9b700f3c0262ba16b0e

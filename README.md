@@ -414,6 +414,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <div align="center">
 
 **Made with ❤️ for better healthcare management**
+** Made by Abhishek and Abhinandan **
 
 ⭐ Star this repository if you found it helpful!
 

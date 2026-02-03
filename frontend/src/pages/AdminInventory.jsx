@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { MdAdd, MdLocalPharmacy, MdSave, MdClose, MdWarehouse, MdInventory, MdWarning, MdEventBusy, MdInfo, MdSettings, MdEdit, MdCheckCircle } from 'react-icons/md';
 
 const AdminInventory = () => {
   const [medicines, setMedicines] = useState([]);
@@ -47,57 +48,225 @@ const AdminInventory = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Inventory Management</h1>
-      <button onClick={() => setShowAdd(true)} className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Add Medicine</button>
-      {showAdd && (
-        <form onSubmit={addMedicine} className="bg-white p-6 rounded shadow mb-6">
-          <div className="grid grid-cols-3 gap-4">
-            <input name="name" value={form.name} onChange={handleChange} placeholder="Name" className="p-2 border rounded" required />
-            <input name="category" value={form.category} onChange={handleChange} placeholder="Category" className="p-2 border rounded" />
-            <input name="stock" value={form.stock} onChange={handleChange} placeholder="Stock" type="number" className="p-2 border rounded" required />
-            <input name="minStock" value={form.minStock} onChange={handleChange} placeholder="Min Stock" type="number" className="p-2 border rounded" />
-            <input name="expiryDate" value={form.expiryDate} onChange={handleChange} placeholder="Expiry Date" type="date" className="p-2 border rounded" />
-            <input name="supplier" value={form.supplier} onChange={handleChange} placeholder="Supplier" className="p-2 border rounded" />
-            <input name="cost" value={form.cost} onChange={handleChange} placeholder="Cost" type="number" className="p-2 border rounded" />
-            <input name="price" value={form.price} onChange={handleChange} placeholder="Price" type="number" className="p-2 border rounded" />
-            <input name="location" value={form.location} onChange={handleChange} placeholder="Location" className="p-2 border rounded" />
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Inventory Management</h1>
+          <p className="text-gray-600">Manage medicine stock, track inventory levels, and monitor expiry dates</p>
+        </div>
+
+        <div className="mb-8">
+          <button
+            onClick={() => setShowAdd(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+          >
+            <MdAdd className="inline mr-2" />Add New Medicine
+          </button>
+        </div>
+
+        {showAdd && (
+          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8 mb-8">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                  <MdLocalPharmacy className="text-white text-lg" />
+                </div>
+                Add New Medicine
+              </h2>
+            </div>
+            <form onSubmit={addMedicine} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Medicine Name</label>
+                  <input
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="Enter medicine name"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                  <input
+                    name="category"
+                    value={form.category}
+                    onChange={handleChange}
+                    placeholder="e.g., Antibiotics, Pain Relief"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Current Stock</label>
+                  <input
+                    name="stock"
+                    value={form.stock}
+                    onChange={handleChange}
+                    placeholder="Units in stock"
+                    type="number"
+                    min="0"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Minimum Stock Level</label>
+                  <input
+                    name="minStock"
+                    value={form.minStock}
+                    onChange={handleChange}
+                    placeholder="Reorder point"
+                    type="number"
+                    min="0"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+                  <input
+                    name="expiryDate"
+                    value={form.expiryDate}
+                    onChange={handleChange}
+                    type="date"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Supplier</label>
+                  <input
+                    name="supplier"
+                    value={form.supplier}
+                    onChange={handleChange}
+                    placeholder="Supplier name"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Cost Price ($)</label>
+                  <input
+                    name="cost"
+                    value={form.cost}
+                    onChange={handleChange}
+                    placeholder="Purchase cost"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Selling Price ($)</label>
+                  <input
+                    name="price"
+                    value={form.price}
+                    onChange={handleChange}
+                    placeholder="Selling price"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Storage Location</label>
+                  <input
+                    name="location"
+                    value={form.location}
+                    onChange={handleChange}
+                    placeholder="e.g., Shelf A-1, Cabinet 3"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                <button
+                  type="submit"
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                >
+                  <MdSave className="inline mr-2" />Add Medicine
+                </button>
+                <button
+                  onClick={() => setShowAdd(false)}
+                  className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                >
+                  <MdClose className="inline mr-2" />Cancel
+                </button>
+              </div>
+            </form>
           </div>
-          <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded mr-2 mt-4">Add</button>
-          <button onClick={() => setShowAdd(false)} className="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
-        </form>
-      )}
-      <div className="bg-white p-6 rounded shadow">
-        <table className="w-full table-auto">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Stock</th>
-              <th className="px-4 py-2">Min Stock</th>
-              <th className="px-4 py-2">Expiry</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {medicines.map(med => (
-              <tr key={med._id}>
-                <td className="border px-4 py-2">{med.name}</td>
-                <td className="border px-4 py-2">{med.stock}</td>
-                <td className="border px-4 py-2">{med.minStock}</td>
-                <td className="border px-4 py-2">{med.expiryDate ? new Date(med.expiryDate).toLocaleDateString() : 'N/A'}</td>
-                <td className="border px-4 py-2">
-                  <span className={`px-2 py-1 rounded ${med.stock <= med.minStock ? 'bg-red-200' : 'bg-green-200'}`}>
-                    {med.stock <= med.minStock ? 'Low Stock' : 'In Stock'}
-                  </span>
-                </td>
-                <td className="border px-4 py-2">
-                  <button onClick={() => updateMedicine(med._id, { stock: prompt('New stock', med.stock) })} className="bg-blue-500 text-white px-2 py-1 rounded">Update Stock</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        )}
+
+        <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
+          <div className="bg-gray-50 px-8 py-6 border-b border-gray-200">
+            <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+              <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
+                <MdWarehouse className="text-white text-lg" />
+              </div>
+              Medicine Inventory
+            </h2>
+          </div>
+
+          <div className="p-8">
+            <div className="overflow-x-auto">
+              <table className="w-full table-auto">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
+                      <MdLocalPharmacy className="inline mr-2" />Medicine Name
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
+                      <MdInventory className="inline mr-2" />Current Stock
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
+                      <MdWarning className="inline mr-2" />Min Stock
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
+                      <MdEventBusy className="inline mr-2" />Expiry Date
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
+                      <MdInfo className="inline mr-2" />Status
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
+                      <MdSettings className="inline mr-2" />Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {medicines.map(med => (
+                    <tr key={med._id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{med.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{med.stock} units</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{med.minStock || 0} units</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {med.expiryDate ? new Date(med.expiryDate).toLocaleDateString() : 'N/A'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex px-3 py-1 text-xs font-bold rounded-full ${
+                          med.stock <= (med.minStock || 0)
+                            ? 'bg-red-100 text-red-800'
+                            : 'bg-green-100 text-green-800'
+                        }`}>
+                          {med.stock <= (med.minStock || 0) ? <MdWarning className="mr-1" /> : <MdCheckCircle className="mr-1" />}
+                          {med.stock <= (med.minStock || 0) ? 'Low Stock' : 'In Stock'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button
+                          onClick={() => updateMedicine(med._id, { stock: prompt('New stock quantity', med.stock) })}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                        >
+                          <MdEdit className="inline mr-1" />Update Stock
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

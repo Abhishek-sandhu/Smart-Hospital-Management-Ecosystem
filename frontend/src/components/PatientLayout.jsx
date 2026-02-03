@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, Outlet } from 'react-router-dom';
+import { MdDashboard, MdLocalPharmacy, MdScience, MdLocalHospital } from 'react-icons/md';
+import { FiUser, FiCalendar, FiCreditCard, FiLogOut } from 'react-icons/fi';
 
 const PatientLayout = () => {
   const [user, setUser] = useState(null);
@@ -22,36 +24,36 @@ const PatientLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="w-64 bg-gradient-to-b from-blue-600 to-blue-800 shadow-2xl">
-        <div className="p-6 border-b border-blue-500">
-          <h2 className="text-2xl font-bold text-white mb-2">Patient Portal</h2>
-          {user && <p className="text-sm text-blue-200">{user.name}</p>}
+    <div className="flex h-screen bg-gray-50">
+      <div className="w-64 bg-white shadow-sm border-r border-gray-200">
+        <div className="p-6 border-b border-gray-200">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Patient Portal</h2>
+          {user && <p className="text-sm text-gray-600">{user.name}</p>}
         </div>
         <nav className="mt-8 px-4">
-          <Link to="/patient" className="block px-4 py-3 mb-2 text-white hover:bg-blue-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-tachometer-alt mr-3"></i>Dashboard
+          <Link to="/patient" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+            <MdDashboard className="mr-3" />Dashboard
           </Link>
-          <Link to="/patient/profile" className="block px-4 py-3 mb-2 text-white hover:bg-blue-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-user mr-3"></i>Profile
+          <Link to="/patient/profile" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+            <FiUser className="mr-3" />Profile
           </Link>
-          <Link to="/patient/appointments" className="block px-4 py-3 mb-2 text-white hover:bg-blue-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-calendar mr-3"></i>Appointments
+          <Link to="/patient/appointments" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+            <FiCalendar className="mr-3" />Appointments
           </Link>
-          <Link to="/patient/prescriptions" className="block px-4 py-3 mb-2 text-white hover:bg-blue-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-pills mr-3"></i>Prescriptions
+          <Link to="/patient/prescriptions" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+            <MdLocalPharmacy className="mr-3" />Prescriptions
           </Link>
-          <Link to="/patient/lab-reports" className="block px-4 py-3 mb-2 text-white hover:bg-blue-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-flask mr-3"></i>Lab Reports
+          <Link to="/patient/lab-reports" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+            <MdScience className="mr-3" />Lab Reports
           </Link>
-          <Link to="/patient/billing" className="block px-4 py-3 mb-2 text-white hover:bg-blue-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-credit-card mr-3"></i>Billing
+          <Link to="/patient/billing" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+            <FiCreditCard className="mr-3" />Billing
           </Link>
-          <Link to="/patient/emergency" className="block px-4 py-3 mb-2 text-white hover:bg-blue-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-ambulance mr-3"></i>Emergency
+          <Link to="/patient/emergency" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+            <MdLocalHospital className="mr-3" />Emergency
           </Link>
-          <button onClick={logout} className="block w-full text-left px-4 py-3 mt-8 text-white hover:bg-red-600 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-sign-out-alt mr-3"></i>Logout
+          <button onClick={logout} className="flex items-center w-full text-left px-4 py-3 mt-8 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+            <FiLogOut className="mr-3" />Logout
           </button>
         </nav>
       </div>

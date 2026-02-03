@@ -24,84 +24,109 @@ const DoctorDashboard = () => {
   }, []);
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 animate-fade-in">Doctor Dashboard</h1>
-        {user && (
-          <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl shadow-lg">
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Doctor Dashboard</h1>
+            <p className="text-gray-600">Manage your patients and medical activities</p>
+          </div>
+          {user && (
+            <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-4">
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
+                  <i className="fas fa-id-card text-white"></i>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Doctor ID</p>
+                  <p className="text-lg font-bold font-mono text-gray-900">{user.uniqueId || 'DOC001'}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        {emergency && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
             <div className="flex items-center">
-              <i className="fas fa-id-card mr-3"></i>
+              <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center mr-4">
+                <i className="fas fa-exclamation-triangle text-white text-xl"></i>
+              </div>
               <div>
-                <p className="text-sm opacity-80">Doctor ID</p>
-                <p className="text-lg font-bold font-mono">{user.uniqueId || 'DOC001'}</p>
+                <h3 className="text-lg font-bold text-red-900">Emergency Alert!</h3>
+                <p className="text-red-700">Patient: {emergency.patient.name} - Symptoms: {emergency.symptoms}</p>
               </div>
             </div>
           </div>
         )}
-      </div>
-      {emergency && (
-        <div className="bg-gradient-to-r from-red-500 to-red-600 text-white p-6 rounded-xl shadow-lg mb-8 animate-pulse">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
           <div className="flex items-center">
-            <i className="fas fa-exclamation-triangle text-3xl mr-4"></i>
+            <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4">
+              <i className="fas fa-users text-white text-xl"></i>
+            </div>
             <div>
-              <h3 className="text-lg font-bold">Emergency Alert!</h3>
-              <p className="text-sm opacity-90">Patient: {emergency.patient.name} - Symptoms: {emergency.symptoms}</p>
+              <p className="text-sm text-gray-600">Total Patients</p>
+              <p className="text-2xl font-bold text-gray-900">{patients.length}</p>
             </div>
           </div>
         </div>
-      )}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
+        <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
           <div className="flex items-center">
-            <i className="fas fa-users text-3xl mr-4"></i>
+            <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
+              <i className="fas fa-calendar-check text-white text-xl"></i>
+            </div>
             <div>
-              <p className="text-sm opacity-80">Total Patients</p>
-              <p className="text-2xl font-bold">{patients.length}</p>
+              <p className="text-sm text-gray-600">Today&apos;s Appointments</p>
+              <p className="text-2xl font-bold text-gray-900">12</p> {/* Placeholder */}
             </div>
           </div>
         </div>
-        <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
+        <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
           <div className="flex items-center">
-            <i className="fas fa-calendar-check text-3xl mr-4"></i>
-            <div>
-              <p className="text-sm opacity-80">Today's Appointments</p>
-              <p className="text-2xl font-bold">12</p> {/* Placeholder */}
+            <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mr-4">
+              <i className="fas fa-prescription text-white text-xl"></i>
             </div>
-          </div>
-        </div>
-        <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300">
-          <div className="flex items-center">
-            <i className="fas fa-prescription text-3xl mr-4"></i>
             <div>
-              <p className="text-sm opacity-80">Prescriptions Today</p>
-              <p className="text-2xl font-bold">8</p> {/* Placeholder */}
+              <p className="text-sm text-gray-600">Prescriptions Today</p>
+              <p className="text-2xl font-bold text-gray-900">8</p> {/* Placeholder */}
             </div>
           </div>
         </div>
       </div>
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800 flex items-center">
-          <i className="fas fa-users mr-3 text-green-500"></i>My Patients
+      <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+        <h2 className="text-2xl font-bold mb-4 text-gray-900 flex items-center">
+          <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
+            <i className="fas fa-users text-white"></i>
+          </div>
+          My Patients
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full table-auto">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
+                  <i className="fas fa-user mr-2"></i>Name
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
+                  <i className="fas fa-envelope mr-2"></i>Email
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
+                  <i className="fas fa-phone mr-2"></i>Phone
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
+                  <i className="fas fa-cogs mr-2"></i>Actions
+                </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200">
               {patients.map(pat => (
-                <tr key={pat._id} className="hover:bg-gray-50 transition-colors duration-200">
+                <tr key={pat._id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{pat.patient.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{pat.patient.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{pat.patient.phone}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg transition-colors duration-200">
-                      View Details
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{pat.patient.email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{pat.patient.phone}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors shadow-sm hover:shadow-md">
+                      <i className="fas fa-eye mr-2"></i>View Details
                     </button>
                   </td>
                 </tr>
@@ -111,6 +136,7 @@ const DoctorDashboard = () => {
         </div>
       </div>
       {/* Form for prescription */}
+    </div>
     </div>
   );
 };

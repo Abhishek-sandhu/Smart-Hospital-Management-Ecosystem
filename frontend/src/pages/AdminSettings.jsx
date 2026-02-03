@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { MdAdminPanelSettings, MdSave, MdClose, MdEdit, MdHistory, MdInbox } from 'react-icons/md';
 
 const AdminSettings = () => {
   const [user, setUser] = useState({});
@@ -44,38 +45,138 @@ const AdminSettings = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Settings & Security</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded shadow">
-          <h2 className="text-2xl font-bold mb-4">Profile</h2>
-          {editing ? (
-            <form onSubmit={handleSubmit}>
-              <input name="name" value={form.name || ''} onChange={handleChange} placeholder="Name" className="block w-full mb-4 p-2 border rounded" />
-              <input name="email" value={form.email || ''} onChange={handleChange} placeholder="Email" className="block w-full mb-4 p-2 border rounded" />
-              <input name="phone" value={form.phone || ''} onChange={handleChange} placeholder="Phone" className="block w-full mb-4 p-2 border rounded" />
-              <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded mr-2">Save</button>
-              <button onClick={() => setEditing(false)} className="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
-            </form>
-          ) : (
-            <div>
-              <p><strong>Name:</strong> {user.name}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Phone:</strong> {user.phone}</p>
-              <p><strong>Permissions:</strong> {user.permissions?.join(', ')}</p>
-              <button onClick={() => setEditing(true)} className="bg-blue-500 text-white px-4 py-2 rounded mt-4">Edit Profile</button>
-            </div>
-          )}
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Settings & Security</h1>
+          <p className="text-gray-600">Manage your profile and view system audit logs</p>
         </div>
-        <div className="bg-white p-6 rounded shadow">
-          <h2 className="text-2xl font-bold mb-4">Audit Logs</h2>
-          <div className="max-h-64 overflow-y-auto">
-            {logs.slice(0, 10).map(log => (
-              <div key={log._id} className="border-b py-2">
-                <p><strong>{log.action}</strong> by {log.user?.name} on {new Date(log.timestamp).toLocaleString()}</p>
-                <p className="text-sm text-gray-600">{log.details}</p>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                  <MdAdminPanelSettings className="text-white text-lg" />
+                </div>
+                Profile Settings
+              </h2>
+            </div>
+
+            {editing ? (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                  <input
+                    name="name"
+                    value={form.name || ''}
+                    onChange={handleChange}
+                    placeholder="Enter your full name"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                  <input
+                    name="email"
+                    value={form.email || ''}
+                    onChange={handleChange}
+                    placeholder="your.email@example.com"
+                    type="email"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                  <input
+                    name="phone"
+                    value={form.phone || ''}
+                    onChange={handleChange}
+                    placeholder="+1 (555) 123-4567"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                  <button
+                    type="submit"
+                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                  >
+                    <MdSave className="inline mr-2" />Save Changes
+                  </button>
+                  <button
+                    onClick={() => setEditing(false)}
+                    className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                  >
+                    <MdClose className="inline mr-2" />Cancel
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                  <span className="text-sm font-medium text-gray-700">Full Name</span>
+                  <span className="text-sm text-gray-900">{user.name}</span>
+                </div>
+                <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                  <span className="text-sm font-medium text-gray-700">Email Address</span>
+                  <span className="text-sm text-gray-900">{user.email}</span>
+                </div>
+                <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                  <span className="text-sm font-medium text-gray-700">Phone Number</span>
+                  <span className="text-sm text-gray-900">{user.phone}</span>
+                </div>
+                <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                  <span className="text-sm font-medium text-gray-700">Permissions</span>
+                  <span className="text-sm text-gray-900">{user.permissions?.join(', ')}</span>
+                </div>
+
+                <div className="pt-6">
+                  <button
+                    onClick={() => setEditing(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                  >
+                    <MdEdit className="inline mr-2" />Edit Profile
+                  </button>
+                </div>
               </div>
-            ))}
+            )}
+          </div>
+
+          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+                <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                  <MdHistory className="text-white text-lg" />
+                </div>
+                Recent Audit Logs
+              </h2>
+            </div>
+
+            <div className="space-y-4 max-h-96 overflow-y-auto">
+              {logs.slice(0, 10).map(log => (
+                <div key={log._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                  <div className="flex items-start justify-between mb-2">
+                    <span className="text-sm font-semibold text-gray-900">{log.action}</span>
+                    <span className="text-xs text-gray-500">{new Date(log.timestamp).toLocaleString()}</span>
+                  </div>
+                  <div className="text-sm text-gray-600 mb-2">
+                    <span className="font-medium">User:</span> {log.user?.name}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    <span className="font-medium">Details:</span> {log.details}
+                  </div>
+                </div>
+              ))}
+              {logs.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  <MdInbox className="text-4xl mb-4 mx-auto" />
+                  <p>No audit logs available</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

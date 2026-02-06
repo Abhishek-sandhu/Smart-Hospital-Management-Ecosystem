@@ -196,7 +196,7 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     // Custom plugin for healthcare-specific utilities
-    function({ addUtilities, theme }) {
+    function({ addUtilities }) {
       const newUtilities = {
         '.text-balance': {
           'text-wrap': 'balance',

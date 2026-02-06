@@ -97,6 +97,7 @@ const AdminLabStaff = () => {
                     type="email"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     required
+                    autoComplete="email"
                   />
                 </div>
                 <div>
@@ -109,6 +110,7 @@ const AdminLabStaff = () => {
                     type="password"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     required
+                    autoComplete="new-password"
                   />
                 </div>
                 <div>

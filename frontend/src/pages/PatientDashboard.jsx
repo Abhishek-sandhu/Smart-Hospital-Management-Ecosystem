@@ -122,7 +122,7 @@ const PatientDashboard = () => {
                 <tbody className="divide-y divide-gray-200">
                   {appointments.slice(0, 5).map((app) => (
                     <tr key={app._id} className="hover:bg-gray-50">
-                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{app.doctor.name}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{app.doctor?.name || 'Unknown'}</td>
                       <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(app.date).toLocaleDateString()}</td>
                       <td className="px-4 py-4 whitespace-nowrap">
                         <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
@@ -152,12 +152,14 @@ const PatientDashboard = () => {
                 <div key={prescription._id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:bg-gray-100 transition-colors">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-medium text-gray-900">{prescription.medicine.name}</h3>
-                      <p className="text-sm text-gray-600">Dr. {prescription.doctor.name}</p>
+                      <h3 className="font-medium text-gray-900">
+                        {prescription.medicines && prescription.medicines.length > 0 ? prescription.medicines[0].name : 'No medicine'}
+                      </h3>
+                      <p className="text-sm text-gray-600">Dr. {prescription.doctor?.name || 'Unknown'}</p>
                       <p className="text-xs text-gray-500">{new Date(prescription.date).toLocaleDateString()}</p>
                     </div>
                     <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
-                      {prescription.dosage}
+                      {prescription.medicines && prescription.medicines.length > 0 ? prescription.medicines[0].dosage : ''}
                     </span>
                   </div>
                 </div>

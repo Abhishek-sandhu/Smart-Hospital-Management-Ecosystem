@@ -160,6 +160,99 @@ The **Smart Hospital Management Ecosystem** is a full-stack web application desi
 
 ---
 
+## 📁 Project Structure
+
+```
+hospital-management/
+├── README.md
+├── backend/
+│   ├── package.json
+│   ├── seedAdmin.js
+│   ├── server.js
+│   ├── test.js
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   ├── adminController.js
+│   │   ├── authController.js
+│   │   ├── doctorController.js
+│   │   ├── labController.js
+│   │   └── patientController.js
+│   ├── middleware/
+│   │   ├── auth.js
+│   │   └── role.js
+│   ├── models/
+│   │   ├── Appointment.js
+│   │   ├── AuditLog.js
+│   │   ├── Bill.js
+│   │   ├── Emergency.js
+│   │   ├── Insurance.js
+│   │   ├── LabReport.js
+│   │   ├── LabTest.js
+│   │   ├── Medicine.js
+│   │   ├── Prescription.js
+│   │   └── User.js
+│   ├── routes/
+│   │   ├── admin.js
+│   │   ├── auth.js
+│   │   ├── doctor.js
+│   │   ├── lab.js
+│   │   └── patient.js
+│   └── uploads/
+├── frontend/
+│   ├── index.html
+│   ├── package.json
+│   ├── postcss.config.cjs
+│   ├── tailwind.config.js
+│   ├── vite.config.js
+│   ├── public/
+│   └── src/
+│       ├── App.jsx
+│       ├── index.css
+│       ├── main.jsx
+│       ├── components/
+│       │   ├── AdminLayout.jsx
+│       │   ├── DoctorLayout.jsx
+│       │   ├── LabLayout.jsx
+│       │   ├── PatientLayout.jsx
+│       │   └── ProtectedRoute.jsx
+│       └── pages/
+│           ├── AdminAnalytics.jsx
+│           ├── AdminBilling.jsx
+│           ├── AdminDashboard.jsx
+│           ├── AdminDoctors.jsx
+│           ├── AdminInsurance.jsx
+│           ├── AdminInventory.jsx
+│           ├── AdminLabStaff.jsx
+│           ├── AdminSettings.jsx
+│           ├── AdminUsers.jsx
+│           ├── DoctorAnalytics.jsx
+│           ├── DoctorAppointments.jsx
+│           ├── DoctorDashboard.jsx
+│           ├── DoctorEmergency.jsx
+│           ├── DoctorLabReports.jsx
+│           ├── DoctorPatients.jsx
+│           ├── DoctorPrescriptions.jsx
+│           ├── DoctorProfile.jsx
+│           ├── LabCriticalCases.jsx
+│           ├── LabDashboard.jsx
+│           ├── LabProfile.jsx
+│           ├── LabReports.jsx
+│           ├── LabTests.jsx
+│           ├── LabUploadReport.jsx
+│           ├── Login.jsx
+│           ├── PatientAppointments.jsx
+│           ├── PatientBilling.jsx
+│           ├── PatientDashboard.jsx
+│           ├── PatientEmergency.jsx
+│           ├── PatientLabReports.jsx
+│           ├── PatientPrescriptions.jsx
+│           ├── PatientProfile.jsx
+│           └── Register.jsx
+```
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -167,8 +260,34 @@ The **Smart Hospital Management Ecosystem** is a full-stack web application desi
 Before you begin, ensure you have the following installed:
 
 - **Node.js** (v16 or higher) - [Download](https://nodejs.org/)
-- **MongoDB** (v4.4 or higher) - [Download](https://www.mongodb.com/)
+- **MongoDB Atlas Account** (Free cloud database) - [Sign up](https://www.mongodb.com/atlas)
 - **Git** - [Download](https://git-scm.com/)
+
+### Database Setup (MongoDB Local)
+
+1. **Install MongoDB** (if not already installed):
+   - Download from [MongoDB Community Server](https://www.mongodb.com/try/download/community)
+   - Follow installation instructions for Windows
+
+2. **Start MongoDB Service**:
+   ```bash
+   # As Administrator, start the service:
+   net start MongoDB
+
+   # Or run mongod manually:
+   mongod --dbpath "C:\data\db"  # Create C:\data\db if it doesn't exist
+   ```
+
+3. **Verify Connection**:
+   - MongoDB should be running on `127.0.0.1:27017`
+   - The backend will connect to `mongodb://127.0.0.1:27017/hospital-management`
+
+4. **Create Admin User**:
+   ```bash
+   cd backend
+   npm run seed:admin
+   ```
+   This creates an admin user: `admin@hospital.com` / `admin123`
 
 ### Installation
 
@@ -209,11 +328,28 @@ Before you begin, ensure you have the following installed:
 Create a `.env` file in the backend directory:
 
 ```env
-MONGO_URI=mongodb://localhost:27017/hospital-management
+MONGO_URI=mongodb://127.0.0.1:27017/hospital-management
 JWT_SECRET=your-super-secret-jwt-key-here
 PORT=5000
 NODE_ENV=development
 ```
+
+### Test Credentials
+
+After setting up the database and running the seed script:
+
+| Role | Email | Password | Dashboard URL |
+|------|-------|----------|---------------|
+| **Admin** | `admin@hospital.com` | `admin123` | `/admin` |
+
+**To test other roles, register new users through the registration form with roles: `patient`, `doctor`, or `lab`.**
+
+### User Registration
+
+Users can register through the `/register` page with the following roles:
+- **Patient**: Access to personal health records, appointments, prescriptions
+- **Doctor**: Access to patient management, prescriptions, emergency queue
+- **Lab Staff**: Access to test management, reports, critical cases
 
 ---
 

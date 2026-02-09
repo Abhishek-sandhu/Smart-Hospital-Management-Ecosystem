@@ -1,16 +1,23 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { FaFlask, FaUser, FaVial, FaFileUpload, FaFileMedical, FaExclamationTriangle, FaSignOutAlt, FaBars } from 'react-icons/fa';
 
 const LabLayout = () => {
   const [user, setUser] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem('token');
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.get('http://localhost:5000/api/auth/me', config);
-      setUser(res.data);
+      try {
+        const res = await axios.get('/api/auth/me', config);
+        setUser(res.data);
+      } catch (e) {
+        console.error("Failed to fetch user", e);
+      }
     };
     fetchUser();
   }, []);
@@ -21,39 +28,78 @@ const LabLayout = () => {
     window.location.href = '/login';
   };
 
+  const navItems = [
+    { path: '/lab', icon: <FaFlask />, label: 'Dashboard' },
+    { path: '/lab/profile', icon: <FaUser />, label: 'Profile' },
+    { path: '/lab/tests', icon: <FaVial />, label: 'Tests' },
+    { path: '/lab/upload-report', icon: <FaFileUpload />, label: 'Upload Report' },
+    { path: '/lab/reports', icon: <FaFileMedical />, label: 'Reports History' },
+    { path: '/lab/critical-cases', icon: <FaExclamationTriangle />, label: 'Critical Cases' },
+  ];
+
   return (
-    <div className="flex h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
-      <div className="w-64 bg-gradient-to-b from-purple-600 to-purple-800 shadow-2xl">
-        <div className="p-6 border-b border-purple-500">
-          <h2 className="text-2xl font-bold text-white mb-2">Lab Portal</h2>
-          {user && <p className="text-sm text-purple-200">{user.name}</p>}
+    <div className="flex h-screen bg-gray-50">
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden animate-fade-in"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`hms-sidebar overflow-y-auto transition-transform duration-300 ease-in-out z-40 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:block fixed md:static h-full`}>
+        <div className="hms-sidebar-header flex flex-col items-center justify-center py-6 bg-gradient-to-br from-purple-600 to-purple-700">
+          <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-3 shadow-inner ring-2 ring-white/30">
+            <FaFlask className="text-3xl text-white" />
+          </div>
+          <h2 className="text-xl font-bold text-white tracking-wide">Lab Portal</h2>
+          {user && <p className="text-xs text-purple-100 mt-1 uppercase tracking-wider">{user.name}</p>}
         </div>
-        <nav className="mt-8 px-4">
-          <Link to="/lab" className="block px-4 py-3 mb-2 text-white hover:bg-purple-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-tachometer-alt mr-3"></i>Dashboard
-          </Link>
-          <Link to="/lab/profile" className="block px-4 py-3 mb-2 text-white hover:bg-purple-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-user mr-3"></i>Profile
-          </Link>
-          <Link to="/lab/tests" className="block px-4 py-3 mb-2 text-white hover:bg-purple-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-flask mr-3"></i>Tests
-          </Link>
-          <Link to="/lab/upload-report" className="block px-4 py-3 mb-2 text-white hover:bg-purple-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-upload mr-3"></i>Upload Report
-          </Link>
-          <Link to="/lab/reports" className="block px-4 py-3 mb-2 text-white hover:bg-purple-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-file-medical mr-3"></i>Reports History
-          </Link>
-          <Link to="/lab/critical-cases" className="block px-4 py-3 mb-2 text-white hover:bg-purple-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-exclamation-triangle mr-3"></i>Critical Cases
-          </Link>
-          <button onClick={logout} className="block w-full text-left px-4 py-3 mt-8 text-white hover:bg-red-600 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-sign-out-alt mr-3"></i>Logout
-          </button>
+
+        <nav className="hms-sidebar-nav px-2 space-y-1 mt-4">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={() => setSidebarOpen(false)}
+              className={`hms-sidebar-nav-item rounded-lg mx-2 ${location.pathname === item.path ? 'active bg-purple-50 text-purple-600 font-semibold shadow-sm border-l-4 border-purple-500' : 'text-gray-600 hover:bg-gray-100 hover:text-purple-500'}`}
+            >
+              <span className={`text-xl mr-3 ${location.pathname === item.path ? 'text-purple-600' : 'text-gray-400'}`}>{item.icon}</span>
+              {item.label}
+            </Link>
+          ))}
+
+          <div className="pt-4 mt-4 border-t border-gray-200 mx-4">
+            <button onClick={logout} className="flex items-center w-full px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200 group">
+              <FaSignOutAlt className="mr-3 text-xl group-hover:scale-110 transition-transform" />
+              Logout
+            </button>
+          </div>
         </nav>
       </div>
-      <div className="flex-1 p-8 overflow-y-auto">
-        <Outlet />
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+        {/* Mobile Header */}
+        <header className="md:hidden bg-white shadow-sm p-4 flex justify-between items-center z-20">
+          <div className="flex items-center">
+            <FaFlask className="text-2xl text-purple-600 mr-2" />
+            <h1 className="font-bold text-gray-800">Lab Portal</h1>
+          </div>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 focus:outline-none"
+          >
+            <FaBars className="text-xl" />
+          </button>
+        </header>
+
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-50 scrollbar-thin">
+          <div className="max-w-6xl mx-auto animate-fade-in">
+            <Outlet />
+          </div>
+        </div>
       </div>
     </div>
   );

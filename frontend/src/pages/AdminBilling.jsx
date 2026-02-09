@@ -15,7 +15,7 @@ const AdminBilling = () => {
   const fetchBills = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/admin/bills', config);
+    const res = await axios.get('/api/admin/bills', config);
     setBills(res.data);
   };
 
@@ -34,7 +34,7 @@ const AdminBilling = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.post('http://localhost:5000/api/admin/bill', form, config);
+      await axios.post('/api/admin/bill', form, config);
       setShowGenerate(false);
       setForm({ patient: '', items: [{ description: '', amount: '' }], totalAmount: '', dueDate: '' });
       fetchBills();
@@ -48,7 +48,7 @@ const AdminBilling = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.put(`http://localhost:5000/api/admin/bill/${id}/status`, { status }, config);
+      await axios.put(`/api/admin/bill/${id}/status`, { status }, config);
       fetchBills();
       alert('Status updated');
     } catch (err) {

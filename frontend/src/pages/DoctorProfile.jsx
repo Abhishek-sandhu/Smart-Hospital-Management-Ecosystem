@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FaUserMd, FaSave, FaTimes, FaUser, FaEnvelope, FaPhone, FaStethoscope, FaCalendarAlt, FaDollarSign, FaEdit } from 'react-icons/fa';
 
 const DoctorProfile = () => {
   const [user, setUser] = useState({});
@@ -10,7 +11,7 @@ const DoctorProfile = () => {
     const fetchUser = async () => {
       const token = localStorage.getItem('token');
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.get('http://localhost:5000/api/doctor/profile', config);
+      const res = await axios.get('/api/doctor/profile', config);
       setUser(res.data);
       setForm(res.data);
     };
@@ -34,7 +35,7 @@ const DoctorProfile = () => {
     };
 
     try {
-      const res = await axios.put('http://localhost:5000/api/doctor/profile', updateData, config);
+      const res = await axios.put('/api/doctor/profile', updateData, config);
       setUser(res.data);
       setEditing(false);
       alert('Profile updated');
@@ -44,18 +45,18 @@ const DoctorProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-8 animate-fade-in">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Doctor Profile</h1>
-          <p className="text-gray-600">Manage your professional information and settings</p>
+          <h1 className="hms-heading-primary">Doctor Profile</h1>
+          <p className="hms-body-text text-gray-600">Manage your professional information and settings</p>
         </div>
 
         <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
           <div className="bg-gray-50 px-8 py-6 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                <i className="fas fa-user-md text-white"></i>
+            <h2 className="hms-heading-secondary flex items-center mb-0">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                <FaUserMd className="text-white text-xl" />
               </div>
               Professional Information
             </h2>
@@ -65,76 +66,77 @@ const DoctorProfile = () => {
             {editing ? (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                  <div className="hms-form-group mb-0">
+                    <label className="hms-form-label">Full Name</label>
                     <input
                       name="name"
                       value={form.name || ''}
                       onChange={handleChange}
                       placeholder="Enter your full name"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="hms-form-input"
                       required
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                  <div className="hms-form-group mb-0">
+                    <label className="hms-form-label">Phone Number</label>
                     <input
                       name="phone"
                       value={form.phone || ''}
                       onChange={handleChange}
                       placeholder="Enter phone number"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="hms-form-input"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Specialization</label>
+                  <div className="hms-form-group mb-0">
+                    <label className="hms-form-label">Specialization</label>
                     <input
                       name="specialization"
                       value={form.specialization || ''}
                       onChange={handleChange}
                       placeholder="e.g., Cardiology, Pediatrics"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="hms-form-input"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Years of Experience</label>
+                  <div className="hms-form-group mb-0">
+                    <label className="hms-form-label">Years of Experience</label>
                     <input
                       name="experience"
                       type="number"
                       value={form.experience || ''}
                       onChange={handleChange}
                       placeholder="Years of experience"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="hms-form-input"
                       min="0"
                     />
                   </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Consultation Fee ($)</label>
+                  <div className="hms-form-group mb-0 md:col-span-2">
+                    <label className="hms-form-label">Consultation Fee ($)</label>
                     <input
                       name="consultationFee"
                       type="number"
                       value={form.consultationFee || ''}
                       onChange={handleChange}
                       placeholder="Consultation fee in dollars"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="hms-form-input"
                       min="0"
                       step="0.01"
                     />
                   </div>
                 </div>
 
-                <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                <div className="flex space-x-4 pt-6 border-t border-gray-100">
                   <button
                     type="submit"
-                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                    className="hms-btn hms-btn-secondary"
                   >
-                    <i className="fas fa-save mr-2"></i>Save Changes
+                    <FaSave className="mr-2" />Save Changes
                   </button>
                   <button
+                    type="button"
                     onClick={() => setEditing(false)}
-                    className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                    className="hms-btn bg-gray-100 text-gray-700 hover:bg-gray-200"
                   >
-                    <i className="fas fa-times mr-2"></i>Cancel
+                    <FaTimes className="mr-2" />Cancel
                   </button>
                 </div>
               </form>
@@ -143,7 +145,7 @@ const DoctorProfile = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="flex items-center mb-2">
-                      <i className="fas fa-user text-blue-600 mr-2"></i>
+                      <FaUser className="text-blue-600 mr-2" />
                       <span className="text-sm font-medium text-gray-700">Full Name</span>
                     </div>
                     <p className="text-lg font-semibold text-gray-900">{user.name}</p>
@@ -151,7 +153,7 @@ const DoctorProfile = () => {
 
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="flex items-center mb-2">
-                      <i className="fas fa-envelope text-blue-600 mr-2"></i>
+                      <FaEnvelope className="text-blue-600 mr-2" />
                       <span className="text-sm font-medium text-gray-700">Email Address</span>
                     </div>
                     <p className="text-lg font-semibold text-gray-900">{user.email}</p>
@@ -159,7 +161,7 @@ const DoctorProfile = () => {
 
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="flex items-center mb-2">
-                      <i className="fas fa-phone text-blue-600 mr-2"></i>
+                      <FaPhone className="text-blue-600 mr-2" />
                       <span className="text-sm font-medium text-gray-700">Phone Number</span>
                     </div>
                     <p className="text-lg font-semibold text-gray-900">{user.phone || 'Not provided'}</p>
@@ -167,7 +169,7 @@ const DoctorProfile = () => {
 
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="flex items-center mb-2">
-                      <i className="fas fa-stethoscope text-blue-600 mr-2"></i>
+                      <FaStethoscope className="text-blue-600 mr-2" />
                       <span className="text-sm font-medium text-gray-700">Specialization</span>
                     </div>
                     <p className="text-lg font-semibold text-gray-900">{user.specialization || 'Not specified'}</p>
@@ -175,7 +177,7 @@ const DoctorProfile = () => {
 
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="flex items-center mb-2">
-                      <i className="fas fa-calendar-alt text-blue-600 mr-2"></i>
+                      <FaCalendarAlt className="text-blue-600 mr-2" />
                       <span className="text-sm font-medium text-gray-700">Years of Experience</span>
                     </div>
                     <p className="text-lg font-semibold text-gray-900">{user.experience ? `${user.experience} years` : 'Not specified'}</p>
@@ -183,19 +185,19 @@ const DoctorProfile = () => {
 
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="flex items-center mb-2">
-                      <i className="fas fa-dollar-sign text-blue-600 mr-2"></i>
+                      <FaDollarSign className="text-blue-600 mr-2" />
                       <span className="text-sm font-medium text-gray-700">Consultation Fee</span>
                     </div>
                     <p className="text-lg font-semibold text-gray-900">{user.consultationFee ? `$${user.consultationFee}` : 'Not specified'}</p>
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-gray-200">
+                <div className="pt-6 border-t border-gray-100">
                   <button
                     onClick={() => setEditing(true)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                    className="hms-btn hms-btn-primary"
                   >
-                    <i className="fas fa-edit mr-2"></i>Edit Profile
+                    <FaEdit className="mr-2" />Edit Profile
                   </button>
                 </div>
               </div>

@@ -11,12 +11,12 @@ const LabCriticalCases = () => {
   const fetchCases = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/lab/critical-cases', config);
+    const res = await axios.get('/api/lab/critical-cases', config);
     setCases(res.data);
   };
 
   const downloadReport = (fileUrl) => {
-    window.open(`http://localhost:5000/${fileUrl}`, '_blank');
+    window.open(`/${fileUrl}`, '_blank');
   };
 
   return (

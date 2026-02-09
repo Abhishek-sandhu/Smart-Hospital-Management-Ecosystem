@@ -10,7 +10,7 @@ const LabProfile = () => {
     const fetchUser = async () => {
       const token = localStorage.getItem('token');
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.get('http://localhost:5000/api/lab/profile', config);
+      const res = await axios.get('/api/lab/profile', config);
       setUser(res.data);
       setForm(res.data);
     };
@@ -24,7 +24,7 @@ const LabProfile = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      const res = await axios.put('http://localhost:5000/api/lab/profile', form, config);
+      const res = await axios.put('/api/lab/profile', form, config);
       setUser(res.data);
       setEditing(false);
       alert('Profile updated');

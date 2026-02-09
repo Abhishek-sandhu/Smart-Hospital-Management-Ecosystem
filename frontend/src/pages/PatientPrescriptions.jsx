@@ -12,7 +12,7 @@ const PatientPrescriptions = () => {
   const fetchPrescriptions = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/patient/prescriptions', config);
+    const res = await axios.get('/api/patient/prescriptions', config);
     setPrescriptions(res.data);
   };
 
@@ -20,7 +20,7 @@ const PatientPrescriptions = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}`, responseType: 'blob' } };
     try {
-      const res = await axios.get(`http://localhost:5000/api/patient/prescription/${id}/download`, config);
+      const res = await axios.get(`/api/patient/prescription/${id}/download`, config);
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -33,11 +33,11 @@ const PatientPrescriptions = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-8 animate-fade-in">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">My Prescriptions</h1>
-          <p className="text-gray-600">View and download your medical prescriptions</p>
+          <h1 className="hms-heading-primary">My Prescriptions</h1>
+          <p className="hms-body-text text-gray-600">View and download your medical prescriptions</p>
         </div>
 
         <div className="space-y-6">

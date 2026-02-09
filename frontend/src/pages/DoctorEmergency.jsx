@@ -11,7 +11,7 @@ const DoctorEmergency = () => {
   const fetchEmergencies = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/doctor/emergencies', config);
+    const res = await axios.get('/api/doctor/emergencies', config);
     setEmergencies(res.data);
   };
 
@@ -19,7 +19,7 @@ const DoctorEmergency = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.put(`http://localhost:5000/api/doctor/emergency/${id}/priority`, { priority }, config);
+      await axios.put(`/api/doctor/emergency/${id}/priority`, { priority }, config);
       fetchEmergencies();
       alert('Priority updated');
     } catch (err) {
@@ -31,7 +31,7 @@ const DoctorEmergency = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.put(`http://localhost:5000/api/doctor/emergency/${id}/handle`, {}, config);
+      await axios.put(`/api/doctor/emergency/${id}/handle`, {}, config);
       fetchEmergencies();
       alert('Emergency handled');
     } catch (err) {
@@ -43,7 +43,7 @@ const DoctorEmergency = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.put(`http://localhost:5000/api/doctor/emergency/${id}/close`, {}, config);
+      await axios.put(`/api/doctor/emergency/${id}/close`, {}, config);
       fetchEmergencies();
       alert('Emergency closed');
     } catch (err) {

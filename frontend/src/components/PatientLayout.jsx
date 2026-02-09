@@ -1,18 +1,24 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, Outlet } from 'react-router-dom';
-import { MdDashboard, MdLocalPharmacy, MdScience, MdLocalHospital } from 'react-icons/md';
-import { FiUser, FiCalendar, FiCreditCard, FiLogOut } from 'react-icons/fi';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { MdDashboard, MdLocalPharmacy, MdScience, MdLocalHospital, MdLogout, MdMenu } from 'react-icons/md';
+import { FiUser, FiCalendar, FiCreditCard } from 'react-icons/fi';
 
 const PatientLayout = () => {
   const [user, setUser] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem('token');
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.get('http://localhost:5000/api/auth/me', config); // Assume we add this endpoint
-      setUser(res.data);
+      try {
+        const res = await axios.get('/api/auth/me', config);
+        setUser(res.data);
+      } catch (e) {
+        console.error("Failed to fetch user", e);
+      }
     };
     fetchUser();
   }, []);
@@ -23,42 +29,79 @@ const PatientLayout = () => {
     window.location.href = '/login';
   };
 
+  const navItems = [
+    { path: '/patient', icon: <MdDashboard />, label: 'Dashboard' },
+    { path: '/patient/profile', icon: <FiUser />, label: 'Profile' },
+    { path: '/patient/appointments', icon: <FiCalendar />, label: 'Appointments' },
+    { path: '/patient/prescriptions', icon: <MdLocalPharmacy />, label: 'Prescriptions' },
+    { path: '/patient/lab-reports', icon: <MdScience />, label: 'Lab Reports' },
+    { path: '/patient/billing', icon: <FiCreditCard />, label: 'Billing' },
+    { path: '/patient/emergency', icon: <MdLocalHospital />, label: 'Emergency' },
+  ];
+
   return (
     <div className="flex h-screen bg-gray-50">
-      <div className="w-64 bg-white shadow-sm border-r border-gray-200">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Patient Portal</h2>
-          {user && <p className="text-sm text-gray-600">{user.name}</p>}
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden animate-fade-in"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`hms-sidebar overflow-y-auto transition-transform duration-300 ease-in-out z-40 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:block fixed md:static h-full`}>
+        <div className="hms-sidebar-header flex flex-col items-center justify-center py-6 bg-gradient-to-br from-blue-500 to-blue-600">
+          <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-3 shadow-inner ring-2 ring-white/30">
+            <FiUser className="text-3xl text-white" />
+          </div>
+          <h2 className="text-xl font-bold text-white tracking-wide">Patient Portal</h2>
+          {user && <p className="text-xs text-blue-100 mt-1 uppercase tracking-wider">{user.name}</p>}
         </div>
-        <nav className="mt-8 px-4">
-          <Link to="/patient" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-            <MdDashboard className="mr-3" />Dashboard
-          </Link>
-          <Link to="/patient/profile" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-            <FiUser className="mr-3" />Profile
-          </Link>
-          <Link to="/patient/appointments" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-            <FiCalendar className="mr-3" />Appointments
-          </Link>
-          <Link to="/patient/prescriptions" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-            <MdLocalPharmacy className="mr-3" />Prescriptions
-          </Link>
-          <Link to="/patient/lab-reports" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-            <MdScience className="mr-3" />Lab Reports
-          </Link>
-          <Link to="/patient/billing" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-            <FiCreditCard className="mr-3" />Billing
-          </Link>
-          <Link to="/patient/emergency" className="flex items-center px-4 py-3 mb-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-            <MdLocalHospital className="mr-3" />Emergency
-          </Link>
-          <button onClick={logout} className="flex items-center w-full text-left px-4 py-3 mt-8 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-            <FiLogOut className="mr-3" />Logout
-          </button>
+
+        <nav className="hms-sidebar-nav px-2 space-y-1 mt-4">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={() => setSidebarOpen(false)}
+              className={`hms-sidebar-nav-item rounded-lg mx-2 ${location.pathname === item.path ? 'active bg-blue-50 text-blue-600 font-semibold shadow-sm border-l-4 border-blue-500' : 'text-gray-600 hover:bg-gray-100 hover:text-blue-500'}`}
+            >
+              <span className={`text-xl mr-3 ${location.pathname === item.path ? 'text-blue-600' : 'text-gray-400'}`}>{item.icon}</span>
+              {item.label}
+            </Link>
+          ))}
+
+          <div className="pt-4 mt-4 border-t border-gray-200 mx-4">
+            <button onClick={logout} className="flex items-center w-full px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200 group">
+              <MdLogout className="mr-3 text-xl group-hover:scale-110 transition-transform" />
+              Logout
+            </button>
+          </div>
         </nav>
       </div>
-      <div className="flex-1 p-8 overflow-y-auto">
-        <Outlet />
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+        {/* Mobile Header */}
+        <header className="md:hidden bg-white shadow-sm p-4 flex justify-between items-center z-20">
+          <div className="flex items-center">
+            <MdLocalHospital className="text-2xl text-blue-600 mr-2" />
+            <h1 className="font-bold text-gray-800">My Health</h1>
+          </div>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 focus:outline-none"
+          >
+            <MdMenu className="text-xl" />
+          </button>
+        </header>
+
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-50 scrollbar-thin">
+          <div className="max-w-5xl mx-auto animate-fade-in">
+            <Outlet />
+          </div>
+        </div>
       </div>
     </div>
   );

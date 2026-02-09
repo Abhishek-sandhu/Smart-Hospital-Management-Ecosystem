@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FaPlus, FaPrescriptionBottleAlt, FaUser, FaStethoscope, FaPills, FaCogs, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
 
 const DoctorPrescriptions = () => {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -13,7 +14,7 @@ const DoctorPrescriptions = () => {
   const fetchPrescriptions = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/doctor/prescriptions', config);
+    const res = await axios.get('/api/doctor/prescriptions', config);
     setPrescriptions(res.data);
   };
 
@@ -32,7 +33,7 @@ const DoctorPrescriptions = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.post('http://localhost:5000/api/doctor/prescription', form, config);
+      await axios.post('/api/doctor/prescription', form, config);
       setShowCreate(false);
       setForm({ patient: '', medicines: [{ name: '', dosage: '', frequency: '', duration: '' }], diagnosis: '', notes: '' });
       fetchPrescriptions();
@@ -46,7 +47,7 @@ const DoctorPrescriptions = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.put(`http://localhost:5000/api/doctor/prescription/${id}`, updates, config);
+      await axios.put(`/api/doctor/prescription/${id}`, updates, config);
       fetchPrescriptions();
       alert('Prescription updated');
     } catch (err) {
@@ -55,66 +56,66 @@ const DoctorPrescriptions = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-8 animate-fade-in">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Prescriptions</h1>
-          <p className="text-gray-600">Create and manage patient prescriptions and medications</p>
+          <h1 className="hms-heading-primary text-3xl">Prescriptions</h1>
+          <p className="hms-body-text text-gray-600">Create and manage patient prescriptions and medications</p>
         </div>
 
         <div className="mb-8">
           <button
             onClick={() => setShowCreate(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+            className="hms-btn hms-btn-primary"
           >
-            <i className="fas fa-plus mr-2"></i>Create New Prescription
+            <FaPlus className="mr-2" />Create New Prescription
           </button>
         </div>
 
         {showCreate && (
-          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8 mb-8">
+          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8 mb-8 animate-fade-in">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                  <i className="fas fa-prescription text-white"></i>
+              <h2 className="hms-heading-secondary flex items-center mb-0">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                  <FaPrescriptionBottleAlt className="text-white text-xl" />
                 </div>
                 Create Prescription
               </h2>
             </div>
             <form onSubmit={createPrescription} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Patient ID</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Patient ID</label>
                   <input
                     name="patient"
                     value={form.patient}
                     onChange={handleChange}
                     placeholder="Enter patient ID"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Diagnosis</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Diagnosis</label>
                   <input
                     name="diagnosis"
                     value={form.diagnosis}
                     onChange={handleChange}
                     placeholder="Enter diagnosis"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+              <div className="hms-form-group mb-0">
+                <label className="hms-form-label">Notes</label>
                 <textarea
                   name="notes"
                   value={form.notes}
                   onChange={handleChange}
                   placeholder="Additional notes"
                   rows={3}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="hms-form-textarea"
                 />
               </div>
 
@@ -124,49 +125,49 @@ const DoctorPrescriptions = () => {
                   <button
                     type="button"
                     onClick={addMedicine}
-                    className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                    className="hms-btn hms-btn-secondary py-1 px-3 text-sm"
                   >
-                    <i className="fas fa-plus mr-2"></i>Add Medicine
+                    <FaPlus className="mr-2" />Add Medicine
                   </button>
                 </div>
                 <div className="space-y-4">
                   {form.medicines.map((med, index) => (
                     <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <div className="hms-form-group mb-0">
+                          <label className="hms-form-label text-xs">Name</label>
                           <input
                             value={med.name}
                             onChange={(e) => handleMedicineChange(index, 'name', e.target.value)}
                             placeholder="Medicine name"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="hms-form-input py-2 text-sm"
                           />
                         </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Dosage</label>
+                        <div className="hms-form-group mb-0">
+                          <label className="hms-form-label text-xs">Dosage</label>
                           <input
                             value={med.dosage}
                             onChange={(e) => handleMedicineChange(index, 'dosage', e.target.value)}
                             placeholder="e.g., 500mg"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="hms-form-input py-2 text-sm"
                           />
                         </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
+                        <div className="hms-form-group mb-0">
+                          <label className="hms-form-label text-xs">Frequency</label>
                           <input
                             value={med.frequency}
                             onChange={(e) => handleMedicineChange(index, 'frequency', e.target.value)}
                             placeholder="e.g., 3 times daily"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="hms-form-input py-2 text-sm"
                           />
                         </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Duration</label>
+                        <div className="hms-form-group mb-0">
+                          <label className="hms-form-label text-xs">Duration</label>
                           <input
                             value={med.duration}
                             onChange={(e) => handleMedicineChange(index, 'duration', e.target.value)}
                             placeholder="e.g., 7 days"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="hms-form-input py-2 text-sm"
                           />
                         </div>
                       </div>
@@ -175,18 +176,19 @@ const DoctorPrescriptions = () => {
                 </div>
               </div>
 
-              <div className="flex space-x-4">
+              <div className="flex space-x-4 pt-4 border-t border-gray-100">
                 <button
                   type="submit"
-                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                  className="hms-btn hms-btn-primary"
                 >
-                  <i className="fas fa-save mr-2"></i>Create Prescription
+                  <FaSave className="mr-2" />Create Prescription
                 </button>
                 <button
+                  type="button"
                   onClick={() => setShowCreate(false)}
-                  className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                  className="hms-btn bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300"
                 >
-                  <i className="fas fa-times mr-2"></i>Cancel
+                  <FaTimes className="mr-2" />Cancel
                 </button>
               </div>
             </form>
@@ -195,50 +197,50 @@ const DoctorPrescriptions = () => {
 
         <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
           <div className="bg-gray-50 px-8 py-6 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-              <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-                <i className="fas fa-pills text-white"></i>
+            <h2 className="hms-heading-secondary flex items-center mb-0">
+              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                <FaPills className="text-white text-xl" />
               </div>
               Prescription Records
             </h2>
           </div>
 
           <div className="p-8">
-            <div className="overflow-x-auto">
-              <table className="w-full table-auto">
-                <thead className="bg-gray-50">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+              <table className="hms-table">
+                <thead>
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-user mr-2"></i>Patient
+                    <th>
+                      <div className="flex items-center"><FaUser className="mr-2" />Patient</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-stethoscope mr-2"></i>Diagnosis
+                    <th>
+                      <div className="flex items-center"><FaStethoscope className="mr-2" />Diagnosis</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-pills mr-2"></i>Medicines
+                    <th>
+                      <div className="flex items-center"><FaPills className="mr-2" />Medicines</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-cogs mr-2"></i>Actions
+                    <th>
+                      <div className="flex items-center"><FaCogs className="mr-2" />Actions</div>
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody>
                   {prescriptions.map(pres => (
-                    <tr key={pres._id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{pres.patient.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{pres.diagnosis}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          <i className="fas fa-pills mr-1"></i>
+                    <tr key={pres._id} className="group hover:bg-gray-50 transition-colors">
+                      <td className="font-medium text-gray-900">{pres.patient.name}</td>
+                      <td className="text-gray-600">{pres.diagnosis}</td>
+                      <td>
+                        <span className="hms-badge hms-badge-info flex items-center w-fit">
+                          <FaPills className="mr-1" />
                           {pres.medicines.length} medicine{pres.medicines.length !== 1 ? 's' : ''}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <td>
                         <button
                           onClick={() => editPrescription(pres._id, { diagnosis: prompt('New diagnosis', pres.diagnosis) })}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                          className="hms-btn hms-btn-secondary px-3 py-1 text-xs"
                         >
-                          <i className="fas fa-edit mr-1"></i>Edit
+                          <FaEdit className="mr-1" />Edit
                         </button>
                       </td>
                     </tr>
@@ -246,6 +248,14 @@ const DoctorPrescriptions = () => {
                 </tbody>
               </table>
             </div>
+            {prescriptions.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaPrescriptionBottleAlt className="text-3xl text-gray-300" />
+                </div>
+                <p className="text-gray-500">No prescriptions found.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

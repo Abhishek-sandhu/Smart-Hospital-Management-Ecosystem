@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FaUserMd, FaExclamationTriangle, FaUsers, FaCalendarCheck, FaPrescriptionBottleAlt, FaEnvelope, FaPhone, FaEye, FaIdCard } from 'react-icons/fa';
 
 const DoctorDashboard = () => {
   const [patients, setPatients] = useState([]);
@@ -12,121 +13,133 @@ const DoctorDashboard = () => {
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
       // Fetch user data
-      const userRes = await axios.get('http://localhost:5000/api/auth/me', config);
+      const userRes = await axios.get('/api/auth/me', config);
       setUser(userRes.data);
 
-      const patRes = await axios.get('http://localhost:5000/api/doctor/patients', config);
+      const patRes = await axios.get('/api/doctor/patients', config);
       setPatients(patRes.data);
-      const emRes = await axios.get('http://localhost:5000/api/doctor/emergencies', config);
+      const emRes = await axios.get('/api/doctor/emergencies', config);
       setEmergency(emRes.data[0] || null); // Get first emergency or null
     };
     fetchData();
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Doctor Dashboard</h1>
-            <p className="text-gray-600">Manage your patients and medical activities</p>
-          </div>
-          {user && (
-            <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-4">
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-                  <i className="fas fa-id-card text-white"></i>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Doctor ID</p>
-                  <p className="text-lg font-bold font-mono text-gray-900">{user.uniqueId || 'DOC001'}</p>
-                </div>
-              </div>
-            </div>
-          )}
+    <div className="space-y-8 animate-fade-in">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div>
+          <h1 className="hms-heading-primary text-3xl">Doctor Dashboard</h1>
+          <p className="hms-body-text text-gray-600">Manage your patients and medical activities</p>
         </div>
-        {emergency && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center mr-4">
-                <i className="fas fa-exclamation-triangle text-white text-xl"></i>
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-red-900">Emergency Alert!</h3>
-                <p className="text-red-700">Patient: {emergency.patient.name} - Symptoms: {emergency.symptoms}</p>
-              </div>
+        {user && (
+          <div className="flex items-center gap-3 bg-green-50 px-4 py-2 rounded-xl border border-green-100">
+            <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center shadow-lg shadow-green-600/20">
+              <FaIdCard className="text-white" />
+            </div>
+            <div>
+              <p className="text-xs text-green-600 font-semibold uppercase tracking-wider">Doctor ID</p>
+              <p className="font-mono text-gray-900 font-bold">{user.uniqueId || 'DOC001'}</p>
             </div>
           </div>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+      </div>
+
+      {emergency && (
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-6 mb-8 animate-pulse-custom mx-0">
           <div className="flex items-center">
-            <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4">
-              <i className="fas fa-users text-white text-xl"></i>
+            <div className="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center mr-4">
+              <FaExclamationTriangle className="text-2xl" />
             </div>
             <div>
-              <p className="text-sm text-gray-600">Total Patients</p>
-              <p className="text-2xl font-bold text-gray-900">{patients.length}</p>
+              <h3 className="text-lg font-bold text-red-900">Emergency Alert!</h3>
+              <p className="text-red-700 font-medium">Patient: {emergency.patient.name} - Symptoms: {emergency.symptoms}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="hms-stat-card group">
           <div className="flex items-center">
-            <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
-              <i className="fas fa-calendar-check text-white text-xl"></i>
+            <div className="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-green-600 group-hover:text-white transition-colors duration-300">
+              <FaUsers />
             </div>
-            <div>
-              <p className="text-sm text-gray-600">Today&apos;s Appointments</p>
-              <p className="text-2xl font-bold text-gray-900">12</p> {/* Placeholder */}
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Patients</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">{patients.length}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+
+        <div className="hms-stat-card group">
           <div className="flex items-center">
-            <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mr-4">
-              <i className="fas fa-prescription text-white text-xl"></i>
+            <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+              <FaCalendarCheck />
             </div>
-            <div>
-              <p className="text-sm text-gray-600">Prescriptions Today</p>
-              <p className="text-2xl font-bold text-gray-900">8</p> {/* Placeholder */}
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Today&apos;s Appointments</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">12</p> {/* Placeholder */}
+            </div>
+          </div>
+        </div>
+
+        <div className="hms-stat-card group">
+          <div className="flex items-center">
+            <div className="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
+              <FaPrescriptionBottleAlt />
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Prescriptions Issued</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">8</p> {/* Placeholder */}
             </div>
           </div>
         </div>
       </div>
-      <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
-        <h2 className="text-2xl font-bold mb-4 text-gray-900 flex items-center">
-          <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-            <i className="fas fa-users text-white"></i>
-          </div>
-          My Patients
-        </h2>
-        <div className="overflow-x-auto">
-          <table className="w-full table-auto">
-            <thead className="bg-gray-50">
+
+      <div className="bg-white shadow-sm border border-gray-100 rounded-2xl p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="hms-heading-secondary flex items-center">
+            <FaUsers className="text-green-600 mr-2" /> My Patients
+          </h2>
+          <button className="hms-btn hms-btn-secondary text-xs px-3 py-1">View All</button>
+        </div>
+
+        <div className="overflow-x-auto rounded-lg border border-gray-200">
+          <table className="hms-table">
+            <thead>
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                  <i className="fas fa-user mr-2"></i>Name
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                  <i className="fas fa-envelope mr-2"></i>Email
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                  <i className="fas fa-phone mr-2"></i>Phone
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                  <i className="fas fa-cogs mr-2"></i>Actions
-                </th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody>
               {patients.map(pat => (
-                <tr key={pat._id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{pat.patient.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{pat.patient.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{pat.patient.phone}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors shadow-sm hover:shadow-md">
-                      <i className="fas fa-eye mr-2"></i>View Details
+                <tr key={pat._id} className="group hover:bg-gray-50 transition-colors">
+                  <td>
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs font-bold mr-3">
+                        {pat.patient.name.charAt(0)}
+                      </div>
+                      <span className="font-medium text-gray-900">{pat.patient.name}</span>
+                    </div>
+                  </td>
+                  <td className="text-gray-500">
+                    <div className="flex items-center">
+                      <FaEnvelope className="text-gray-400 mr-2" />
+                      {pat.patient.email}
+                    </div>
+                  </td>
+                  <td className="text-gray-500">
+                    <div className="flex items-center">
+                      <FaPhone className="text-gray-400 mr-2" />
+                      {pat.patient.phone}
+                    </div>
+                  </td>
+                  <td>
+                    <button className="hms-btn hms-btn-primary px-3 py-1.5 text-xs flex items-center">
+                      <FaEye className="mr-1.5" /> View
                     </button>
                   </td>
                 </tr>
@@ -135,8 +148,6 @@ const DoctorDashboard = () => {
           </table>
         </div>
       </div>
-      {/* Form for prescription */}
-    </div>
     </div>
   );
 };

@@ -12,7 +12,7 @@ const AdminInsurance = () => {
   const fetchInsurances = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/admin/insurances', config);
+    const res = await axios.get('/api/admin/insurances', config);
     setInsurances(res.data);
   };
 
@@ -20,7 +20,7 @@ const AdminInsurance = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.put(`http://localhost:5000/api/admin/insurance/${id}/approve`, {}, config);
+      await axios.put(`/api/admin/insurance/${id}/approve`, {}, config);
       fetchInsurances();
       alert('Insurance approved');
     } catch (err) {
@@ -32,7 +32,7 @@ const AdminInsurance = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.put(`http://localhost:5000/api/admin/insurance/${id}/reject`, {}, config);
+      await axios.put(`/api/admin/insurance/${id}/reject`, {}, config);
       fetchInsurances();
       alert('Insurance rejected');
     } catch (err) {

@@ -14,7 +14,7 @@ const PatientProfile = () => {
   const fetchUser = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/auth/me', config);
+    const res = await axios.get('/api/auth/me', config);
     setUser(res.data);
     setForm(res.data);
   };
@@ -26,7 +26,7 @@ const PatientProfile = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.put('http://localhost:5000/api/patient/profile', form, config);
+      await axios.put('/api/patient/profile', form, config);
       setEditing(false);
       fetchUser();
       alert('Profile updated');
@@ -38,11 +38,11 @@ const PatientProfile = () => {
   if (!user) return <div>Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-8 animate-fade-in">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">My Profile</h1>
-          <p className="text-gray-600">Manage your personal information and preferences</p>
+          <h1 className="hms-heading-primary">My Profile</h1>
+          <p className="hms-body-text text-gray-600">Manage your personal information and preferences</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -63,7 +63,7 @@ const PatientProfile = () => {
                   {!editing ? (
                     <button
                       onClick={() => setEditing(true)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                      className="hms-btn hms-btn-primary"
                     >
                       <MdEdit className="inline mr-2" />Edit Profile
                     </button>
@@ -72,7 +72,7 @@ const PatientProfile = () => {
                       <button
                         type="button"
                         onClick={() => setEditing(false)}
-                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                        className="hms-btn bg-gray-100 text-gray-700 hover:bg-gray-200"
                       >
                         <MdClose className="inline mr-2" />Cancel
                       </button>
@@ -88,8 +88,8 @@ const PatientProfile = () => {
               <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-gray-900">
+                    <div className="hms-form-group mb-0">
+                      <label className="hms-form-label">
                         <MdUser className="inline mr-2 text-blue-600" />Full Name
                       </label>
                       <input
@@ -97,12 +97,12 @@ const PatientProfile = () => {
                         value={form.name || ''}
                         onChange={handleChange}
                         placeholder="Enter your full name"
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm"
+                        className="hms-form-input"
                         required
                       />
                     </div>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-gray-900">
+                    <div className="hms-form-group mb-0">
+                      <label className="hms-form-label">
                         <MdPhone className="inline mr-2 text-green-600" />Phone Number
                       </label>
                       <input
@@ -110,11 +110,11 @@ const PatientProfile = () => {
                         value={form.phone || ''}
                         onChange={handleChange}
                         placeholder="Enter your phone number"
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm"
+                        className="hms-form-input"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-gray-900">
+                    <div className="hms-form-group mb-0">
+                      <label className="hms-form-label">
                         <MdLocationOn className="inline mr-2 text-red-600" />Address
                       </label>
                       <input
@@ -122,11 +122,11 @@ const PatientProfile = () => {
                         value={form.address || ''}
                         onChange={handleChange}
                         placeholder="Enter your address"
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm"
+                        className="hms-form-input"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-gray-900">
+                    <div className="hms-form-group mb-0">
+                      <label className="hms-form-label">
                         <MdCake className="inline mr-2 text-yellow-600" />Age
                       </label>
                       <input
@@ -135,32 +135,34 @@ const PatientProfile = () => {
                         value={form.age || ''}
                         onChange={handleChange}
                         placeholder="Enter your age"
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm"
+                        className="hms-form-input"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-gray-900">
+                    <div className="hms-form-group mb-0">
+                      <label className="hms-form-label">
                         <MdBloodtype className="inline mr-2 text-red-600" />Blood Group
                       </label>
-                      <select
-                        name="bloodGroup"
-                        value={form.bloodGroup || ''}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm"
-                      >
-                        <option value="">Select Blood Group</option>
-                        <option value="A+">A+</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B-">B-</option>
-                        <option value="AB+">AB+</option>
-                        <option value="AB-">AB-</option>
-                        <option value="O+">O+</option>
-                        <option value="O-">O-</option>
-                      </select>
+                      <div className="relative">
+                        <select
+                          name="bloodGroup"
+                          value={form.bloodGroup || ''}
+                          onChange={handleChange}
+                          className="hms-form-select"
+                        >
+                          <option value="">Select Blood Group</option>
+                          <option value="A+">A+</option>
+                          <option value="A-">A-</option>
+                          <option value="B+">B+</option>
+                          <option value="B-">B-</option>
+                          <option value="AB+">AB+</option>
+                          <option value="AB-">AB-</option>
+                          <option value="O+">O+</option>
+                          <option value="O-">O-</option>
+                        </select>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-gray-900">
+                    <div className="hms-form-group mb-0">
+                      <label className="hms-form-label">
                         <MdSecurity className="inline mr-2 text-indigo-600" />Insurance ID
                       </label>
                       <input
@@ -168,22 +170,22 @@ const PatientProfile = () => {
                         value={form.insuranceId || ''}
                         onChange={handleChange}
                         placeholder="Enter insurance ID"
-                        className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 shadow-sm"
+                        className="hms-form-input"
                       />
                     </div>
                   </div>
 
-                  <div className="flex space-x-4 pt-6">
+                  <div className="flex space-x-4 pt-6 text-right justify-end border-t border-gray-100">
                     <button
                       type="submit"
-                      className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                      className="hms-btn hms-btn-secondary"
                     >
                       <MdSave className="inline mr-2" />Save Changes
                     </button>
                     <button
                       type="button"
                       onClick={() => setEditing(false)}
-                      className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-8 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                      className="hms-btn bg-gray-100 text-gray-700 hover:bg-gray-200"
                     >
                       <MdClose className="inline mr-2" />Cancel
                     </button>
@@ -238,9 +240,9 @@ const PatientProfile = () => {
                 </div>
 
                 <div className="bg-white border border-gray-200 rounded-lg p-6 text-center">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Profile Completion</h3>
+                  <h3 className="hms-heading-secondary text-gray-900 mb-2">Profile Completion</h3>
                   <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
-                    <div className="bg-blue-600 h-3 rounded-full" style={{width: '85%'}}></div>
+                    <div className="bg-blue-600 h-3 rounded-full" style={{ width: '85%' }}></div>
                   </div>
                   <p className="text-gray-600">85% Complete</p>
                 </div>

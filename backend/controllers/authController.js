@@ -9,16 +9,20 @@ const register = async (req, res) => {
     name: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
-    role: Joi.string().valid('patient', 'doctor', 'lab').required(),
+    role: Joi.string().valid('patient', 'doctor', 'lab', 'admin').required(),
     phone: Joi.string(),
     address: Joi.string(),
     dateOfBirth: Joi.date(),
-    gender: Joi.string()
+    gender: Joi.string(),
+    specialization: Joi.string(),
+    experience: Joi.number(),
+    consultationFee: Joi.number(),
+    department: Joi.string()
   });
   const { error } = schema.validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const { name, email, password, role, phone, address, dateOfBirth, gender } = req.body;
+  const { name, email, password, role, phone, address, dateOfBirth, gender, specialization, experience, consultationFee, department } = req.body;
 
   try {
     // Check if database is connected
@@ -45,18 +49,24 @@ const register = async (req, res) => {
       phone,
       address,
       dateOfBirth,
-      gender
+      gender,
+      specialization,
+      experience,
+      consultationFee,
+      department
     });
 
     await user.save();
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'fallback_secret');
-    res.status(201).send({ user: {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      uniqueId: user.uniqueId
-    }, token });
+    res.status(201).send({
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        uniqueId: user.uniqueId
+      }, token
+    });
   } catch (error) {
     res.status(500).send({ error: 'Server error' });
   }
@@ -84,13 +94,15 @@ const login = async (req, res) => {
     if (!isMatch) return res.status(400).send({ error: 'Invalid email or password' });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'fallback_secret');
-    res.send({ user: {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      uniqueId: user.uniqueId
-    }, token });
+    res.send({
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        uniqueId: user.uniqueId
+      }, token
+    });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).send({ error: 'Server error during login' });

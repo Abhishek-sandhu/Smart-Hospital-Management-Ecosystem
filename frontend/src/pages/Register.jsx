@@ -1,23 +1,27 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { FaHospital, FaUser, FaEnvelope, FaLock, FaPhone, FaCalendar, FaUserMd, FaSpinner, FaSignInAlt, FaUserPlus, FaInfoCircle } from 'react-icons/fa';
 
 const Register = () => {
-  const [form, setForm] = useState({
+  const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     role: 'patient',
     phone: '',
-    address: '',
     dateOfBirth: '',
-    gender: ''
+    gender: 'male'
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const { name, email, password, role, phone, dateOfBirth, gender } = formData;
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,190 +29,208 @@ const Register = () => {
     setError('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', form);
+      const res = await axios.post('/api/auth/register', formData);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.user.role);
       navigate(`/${res.data.user.role}`);
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed. Please try again.');
+      setError(err.response?.data?.error || err.response?.data || 'Registration failed');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-500 to-blue-600 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl">
+    <div className="min-h-screen flex items-center justify-center p-4 animate-rainbow bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 bg-size-200">
+      <div className="glass-effect p-8 rounded-3xl shadow-2xl w-full max-w-2xl animate-fade-in-up border border-white/20 relative overflow-hidden my-8">
+
+        {/* Decorative background */}
+        <div className="absolute top-0 right-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+          <div className="absolute top-[-100px] right-[-50px] w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse-custom"></div>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-            <i className="fas fa-user-plus text-green-600 text-2xl"></i>
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-md rounded-full mb-4 shadow-glow">
+            <FaUserPlus className="text-white text-2xl" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Create Account</h2>
-          <p className="text-gray-600">Join our healthcare community</p>
+          <h2 className="text-3xl font-bold text-white mb-2 drop-shadow-sm font-display">Create Account</h2>
+          <p className="text-blue-100">Join our medical community</p>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
-            <i className="fas fa-exclamation-triangle mr-2"></i>
+          <div className="bg-red-500/20 backdrop-blur-md border border-red-500/50 text-white px-4 py-3 rounded-xl mb-6 text-sm flex items-center shadow-lg">
+            <FaInfoCircle className="mr-2 flex-shrink-0" />
             {error}
           </div>
         )}
 
-        {/* Registration Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <i className="fas fa-user mr-2 text-green-500"></i>Full Name
-              </label>
-              <input
-                name="name"
-                placeholder="Enter your full name"
-                value={form.name}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                required
-                disabled={loading}
-              />
+
+            {/* Full Name */}
+            <div className="group">
+              <label className="block text-sm font-semibold text-blue-100 mb-2 ml-1">Full Name</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <FaUser className="text-blue-200" />
+                </div>
+                <input
+                  type="text"
+                  name="name"
+                  value={name}
+                  onChange={handleChange}
+                  className="w-full pl-11 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/20 transition-all duration-300"
+                  placeholder="John Doe"
+                  required
+                />
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <i className="fas fa-envelope mr-2 text-green-500"></i>Email Address
-              </label>
-              <input
-                name="email"
-                type="email"
-                placeholder="Enter your email"
-                value={form.email}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                required
-                disabled={loading}
-              />
+
+            {/* Email */}
+            <div className="group">
+              <label className="block text-sm font-semibold text-blue-100 mb-2 ml-1">Email Address</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <FaEnvelope className="text-blue-200" />
+                </div>
+                <input
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={handleChange}
+                  className="w-full pl-11 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/20 transition-all duration-300"
+                  placeholder="john@example.com"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Password */}
+            <div className="group">
+              <label className="block text-sm font-semibold text-blue-100 mb-2 ml-1">Password</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <FaLock className="text-blue-200" />
+                </div>
+                <input
+                  type="password"
+                  name="password"
+                  value={password}
+                  onChange={handleChange}
+                  className="w-full pl-11 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/20 transition-all duration-300"
+                  placeholder="••••••••"
+                  required
+                  minLength="6"
+                />
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div className="group">
+              <label className="block text-sm font-semibold text-blue-100 mb-2 ml-1">Phone Number</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <FaPhone className="text-blue-200" />
+                </div>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={phone}
+                  onChange={handleChange}
+                  className="w-full pl-11 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/20 transition-all duration-300"
+                  placeholder="+1 (234) 567-8900"
+                />
+              </div>
+            </div>
+
+            {/* Date of Birth */}
+            <div className="group">
+              <label className="block text-sm font-semibold text-blue-100 mb-2 ml-1">Date of Birth</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <FaCalendar className="text-blue-200" />
+                </div>
+                <input
+                  type="date"
+                  name="dateOfBirth"
+                  value={dateOfBirth}
+                  onChange={handleChange}
+                  className="w-full pl-11 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/20 transition-all duration-300"
+                />
+              </div>
+            </div>
+
+            {/* Gender */}
+            <div className="group">
+              <label className="block text-sm font-semibold text-blue-100 mb-2 ml-1">Gender</label>
+              <div className="relative">
+                <select
+                  name="gender"
+                  value={gender}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/20 transition-all duration-300 appearance-none cursor-pointer"
+                >
+                  <option value="male" className="bg-gray-800 text-white">Male</option>
+                  <option value="female" className="bg-gray-800 text-white">Female</option>
+                  <option value="other" className="bg-gray-800 text-white">Other</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <i className="fas fa-lock mr-2 text-green-500"></i>Password
-            </label>
-            <input
-              name="password"
-              type="password"
-              placeholder="Create a strong password"
-              value={form.password}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-              required
-              disabled={loading}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <i className="fas fa-user-tag mr-2 text-green-500"></i>Account Type
-            </label>
-            <select
-              name="role"
-              value={form.role}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-              disabled={loading}
-            >
-              <option value="patient">👤 Patient</option>
-              <option value="doctor">👨‍⚕️ Doctor</option>
-              <option value="lab">🧪 Lab Staff</option>
-            </select>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <i className="fas fa-phone mr-2 text-green-500"></i>Phone Number
-              </label>
-              <input
-                name="phone"
-                placeholder="Enter your phone number"
-                value={form.phone}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                disabled={loading}
-              />
+          {/* Role Selection - Full Width */}
+          <div className="group">
+            <label className="block text-sm font-semibold text-blue-100 mb-3 ml-1">I am a...</label>
+            <div className="grid grid-cols-3 gap-4">
+              {['patient', 'doctor', 'lab'].map((r) => (
+                <label key={r} className={`cursor-pointer relative overflow-hidden rounded-xl border border-white/20 transition-all duration-300 ${role === r ? 'bg-white/20 shadow-glow ring-2 ring-white/50' : 'bg-white/5 hover:bg-white/10'}`}>
+                  <input
+                    type="radio"
+                    name="role"
+                    value={r}
+                    checked={role === r}
+                    onChange={handleChange}
+                    className="sr-only"
+                  />
+                  <div className="p-4 flex flex-col items-center justify-center text-center">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 transition-transform duration-300 ${role === r ? 'scale-110 bg-white text-purple-600' : 'bg-white/10 text-white'}`}>
+                      {r === 'patient' && <FaUser />}
+                      {r === 'doctor' && <FaUserMd />}
+                      {r === 'lab' && <FaHospital />} {/* Changed FaSpinner to FaHospital for lab */}
+                    </div>
+                    <span className="capitalize font-medium text-white text-sm">{r}</span>
+                  </div>
+                </label>
+              ))}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <i className="fas fa-birthday-cake mr-2 text-green-500"></i>Date of Birth
-              </label>
-              <input
-                name="dateOfBirth"
-                type="date"
-                value={form.dateOfBirth}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                disabled={loading}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <i className="fas fa-map-marker-alt mr-2 text-green-500"></i>Address
-            </label>
-            <input
-              name="address"
-              placeholder="Enter your full address"
-              value={form.address}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-              disabled={loading}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <i className="fas fa-venus-mars mr-2 text-green-500"></i>Gender
-            </label>
-            <select
-              name="gender"
-              value={form.gender}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-              disabled={loading}
-            >
-              <option value="">Select Gender</option>
-              <option value="male">♂️ Male</option>
-              <option value="female">♀️ Female</option>
-              <option value="other">⚧ Other</option>
-            </select>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-4 px-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-glow active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed mt-4"
           >
             {loading ? (
               <div className="flex items-center justify-center">
-                <i className="fas fa-spinner fa-spin mr-2"></i>
+                <FaSpinner className="animate-spin mr-2" />
                 Creating Account...
               </div>
             ) : (
               <div className="flex items-center justify-center">
-                <i className="fas fa-user-plus mr-2"></i>
-                Create Account
+                <FaSignInAlt className="mr-2" />
+                Register
               </div>
             )}
           </button>
         </form>
 
-        {/* Footer */}
         <div className="mt-8 text-center">
-          <p className="text-gray-600">
+          <p className="text-blue-100 text-sm">
             Already have an account?{' '}
-            <Link to="/login" className="text-green-600 hover:text-green-800 font-medium transition-colors duration-200">
-              Sign In
+            <Link to="/login" className="text-white hover:text-blue-200 font-bold underline transition-colors duration-200 inline-flex items-center">
+              <FaSignInAlt className="mr-1" /> Sign In
             </Link>
           </p>
         </div>

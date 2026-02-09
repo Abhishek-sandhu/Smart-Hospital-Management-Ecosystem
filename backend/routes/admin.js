@@ -1,5 +1,5 @@
 const express = require('express');
-const { getUsers, manageMedicineStock, getMedicines, createBill, getBills, approveInsurance, manageEmergencyQueue, createDoctor, deleteDoctor, createLabStaff, deleteLabStaff, getProfile, updateProfile, getAuditLogs, getAnalytics } = require('../controllers/adminController');
+const { getUsers, manageMedicineStock, getMedicines, createBill, getBills, updateBillStatus, approveInsurance, getInsurances, manageEmergencyQueue, createDoctor, deleteDoctor, createLabStaff, deleteLabStaff, getProfile, updateProfile, getAuditLogs, getAnalytics } = require('../controllers/adminController');
 const auth = require('../middleware/auth');
 const role = require('../middleware/role');
 const router = express.Router();
@@ -11,7 +11,9 @@ router.post('/medicine', manageMedicineStock);
 router.get('/medicines', getMedicines);
 router.post('/bill', createBill);
 router.get('/bills', getBills);
+router.put('/bill/:id/status', updateBillStatus);
 router.post('/insurance', approveInsurance);
+router.get('/insurances', getInsurances);
 router.get('/emergencies', manageEmergencyQueue);
 router.post('/doctor', createDoctor);
 router.delete('/doctor/:id', deleteDoctor);

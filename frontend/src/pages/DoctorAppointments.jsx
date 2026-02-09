@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FaCalendarCheck, FaUser, FaClock, FaNotesMedical, FaInfoCircle, FaCogs, FaCheckCircle, FaCheckDouble, FaTimesCircle, FaCheck, FaTimes } from 'react-icons/fa';
 
 const DoctorAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -11,7 +12,7 @@ const DoctorAppointments = () => {
   const fetchAppointments = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/doctor/appointments/today', config);
+    const res = await axios.get('/api/doctor/appointments/today', config);
     setAppointments(res.data);
   };
 
@@ -19,7 +20,7 @@ const DoctorAppointments = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.put(`http://localhost:5000/api/doctor/appointment/${id}/status`, { status, notes }, config);
+      await axios.put(`/api/doctor/appointment/${id}/status`, { status, notes }, config);
       fetchAppointments();
       alert('Status updated');
     } catch (err) {
@@ -28,93 +29,87 @@ const DoctorAppointments = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-8 animate-fade-in">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Today&apos;s Appointments</h1>
-          <p className="text-gray-600">Manage your scheduled appointments for today</p>
+          <h1 className="hms-heading-primary">Today&apos;s Appointments</h1>
+          <p className="hms-body-text text-gray-600">Manage your scheduled appointments for today</p>
         </div>
 
         <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
           <div className="bg-gray-50 px-8 py-6 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-              <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-                <i className="fas fa-calendar-check text-white"></i>
+            <h2 className="hms-heading-secondary flex items-center mb-0">
+              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                <FaCalendarCheck className="text-white text-xl" />
               </div>
               Appointment Schedule
             </h2>
           </div>
 
           <div className="p-8">
-            <div className="overflow-x-auto">
-              <table className="w-full table-auto">
-                <thead className="bg-gray-50">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+              <table className="hms-table">
+                <thead>
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-user mr-2"></i>Patient
+                    <th>
+                      <div className="flex items-center"><FaUser className="mr-2" />Patient</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-clock mr-2"></i>Time
+                    <th>
+                      <div className="flex items-center"><FaClock className="mr-2" />Time</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-comment-medical mr-2"></i>Reason
+                    <th>
+                      <div className="flex items-center"><FaNotesMedical className="mr-2" />Reason</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-info-circle mr-2"></i>Status
+                    <th>
+                      <div className="flex items-center"><FaInfoCircle className="mr-2" />Status</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-cogs mr-2"></i>Actions
+                    <th>
+                      <div className="flex items-center"><FaCogs className="mr-2" />Actions</div>
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody>
                   {appointments.map(app => (
-                    <tr key={app._id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{app.patient.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{app.time}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{app.reason}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex px-3 py-1 text-xs font-bold rounded-full ${
-                          app.status === 'confirmed'
-                            ? 'bg-green-100 text-green-800'
-                            : app.status === 'pending'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : app.status === 'completed'
-                            ? 'bg-blue-100 text-blue-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}>
-                          <i className={`fas mr-1 ${
-                            app.status === 'confirmed' ? 'fa-check-circle' :
-                            app.status === 'pending' ? 'fa-clock' :
-                            app.status === 'completed' ? 'fa-check-double' :
-                            'fa-times-circle'
-                          }`}></i>
+                    <tr key={app._id} className="group hover:bg-gray-50 transition-colors">
+                      <td className="font-medium text-gray-900">{app.patient.name}</td>
+                      <td className="font-mono text-gray-600">{app.time}</td>
+                      <td className="text-gray-600 italic">{app.reason}</td>
+                      <td>
+                        <span className={`hms-badge ${app.status === 'confirmed' ? 'hms-badge-success' :
+                          app.status === 'pending' ? 'hms-badge-pending' :
+                            app.status === 'completed' ? 'hms-badge-info' :
+                              'hms-badge-error'
+                          }`}>
+                          {app.status === 'confirmed' ? <FaCheckCircle className="mr-1" /> :
+                            app.status === 'pending' ? <FaClock className="mr-1" /> :
+                              app.status === 'completed' ? <FaCheckDouble className="mr-1" /> :
+                                <FaTimesCircle className="mr-1" />}
                           {app.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                      <td className="space-x-2">
                         {app.status === 'pending' && (
-                          <>
+                          <div className="flex gap-2">
                             <button
                               onClick={() => updateStatus(app._id, 'confirmed')}
-                              className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                              className="hms-btn hms-btn-secondary px-3 py-1 text-xs"
                             >
-                              <i className="fas fa-check mr-1"></i>Accept
+                              <FaCheck className="mr-1" />Accept
                             </button>
                             <button
                               onClick={() => updateStatus(app._id, 'cancelled')}
-                              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                              className="hms-btn bg-white border border-red-200 text-red-600 hover:bg-red-50 px-3 py-1 text-xs shadow-sm"
                             >
-                              <i className="fas fa-times mr-1"></i>Reject
+                              <FaTimes className="mr-1" />Reject
                             </button>
-                          </>
+                          </div>
                         )}
                         {app.status === 'confirmed' && (
                           <button
                             onClick={() => updateStatus(app._id, 'completed', prompt('Consultation notes'))}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                            className="hms-btn hms-btn-primary px-3 py-1 text-xs"
                           >
-                            <i className="fas fa-check-double mr-1"></i>Complete
+                            <FaCheckDouble className="mr-1" />Complete
                           </button>
                         )}
                       </td>
@@ -123,6 +118,14 @@ const DoctorAppointments = () => {
                 </tbody>
               </table>
             </div>
+            {appointments.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaCalendarCheck className="text-3xl text-gray-300" />
+                </div>
+                <p className="text-gray-500">No appointments scheduled for today.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

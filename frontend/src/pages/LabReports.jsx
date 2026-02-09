@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FaFileMedical, FaUser, FaFlask, FaInfoCircle, FaExclamationTriangle, FaCogs, FaCheckCircle, FaClock, FaCheck, FaSave, FaTimes, FaEdit, FaDownload, FaFileUpload } from 'react-icons/fa';
 
 const LabReports = () => {
   const [reports, setReports] = useState([]);
@@ -14,7 +15,7 @@ const LabReports = () => {
   const fetchReports = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/lab/reports', config);
+    const res = await axios.get('/api/lab/reports', config);
     setReports(res.data);
   };
 
@@ -38,7 +39,7 @@ const LabReports = () => {
     if (editFile) formData.append('file', editFile);
 
     try {
-      await axios.put(`http://localhost:5000/api/lab/report/${editing}`, formData, {
+      await axios.put(`/api/lab/report/${editing}`, formData, {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
       });
       setEditing(null);
@@ -50,88 +51,83 @@ const LabReports = () => {
   };
 
   const downloadReport = (fileUrl) => {
-    window.open(`http://localhost:5000/${fileUrl}`, '_blank');
+    window.open(`/${fileUrl}`, '_blank');
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-8 animate-fade-in">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Reports History</h1>
-          <p className="text-gray-600">View and manage laboratory test reports and results</p>
+          <h1 className="hms-heading-primary text-3xl">Reports History</h1>
+          <p className="hms-body-text text-gray-600">View and manage laboratory test reports and results</p>
         </div>
 
         <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
           <div className="bg-gray-50 px-8 py-6 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-              <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center mr-3">
-                <i className="fas fa-file-medical text-white"></i>
+            <h2 className="hms-heading-secondary flex items-center mb-0">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                <FaFileMedical className="text-white text-xl" />
               </div>
               Laboratory Reports
             </h2>
           </div>
 
           <div className="p-8">
-            <div className="overflow-x-auto">
-              <table className="w-full table-auto">
-                <thead className="bg-gray-50">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+              <table className="hms-table">
+                <thead>
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-user mr-2"></i>Patient
+                    <th>
+                      <div className="flex items-center"><FaUser className="mr-2" />Patient</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-flask mr-2"></i>Test Name
+                    <th>
+                      <div className="flex items-center"><FaFlask className="mr-2" />Test Name</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-info-circle mr-2"></i>Status
+                    <th>
+                      <div className="flex items-center"><FaInfoCircle className="mr-2" />Status</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-exclamation-triangle mr-2"></i>Critical
+                    <th>
+                      <div className="flex items-center"><FaExclamationTriangle className="mr-2" />Critical</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <i className="fas fa-cogs mr-2"></i>Actions
+                    <th>
+                      <div className="flex items-center"><FaCogs className="mr-2" />Actions</div>
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody>
                   {reports.map(report => (
-                    <tr key={report._id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{report.patient.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{report.testName}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex px-3 py-1 text-xs font-bold rounded-full ${
-                          report.status === 'completed'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          <i className={`fas mr-1 ${
-                            report.status === 'completed' ? 'fa-check-circle' : 'fa-clock'
-                          }`}></i>
+                    <tr key={report._id} className="group hover:bg-gray-50 transition-colors">
+                      <td className="font-medium text-gray-900">{report.patient.name}</td>
+                      <td className="text-gray-600">{report.testName}</td>
+                      <td>
+                        <span className={`hms-badge ${report.status === 'completed' ? 'hms-badge-success' : 'hms-badge-warning'
+                          }`}>
+                          {report.status === 'completed' ? <FaCheckCircle className="mr-1" /> : <FaClock className="mr-1" />}
                           {report.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td>
                         {report.critical ? (
-                          <span className="inline-flex px-3 py-1 text-xs font-bold rounded-full bg-red-100 text-red-800">
-                            <i className="fas fa-exclamation-triangle mr-1"></i>Critical
+                          <span className="hms-badge hms-badge-error">
+                            <FaExclamationTriangle className="mr-1" />Critical
                           </span>
                         ) : (
-                          <span className="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
-                            <i className="fas fa-check mr-1"></i>Normal
+                          <span className="hms-badge hms-badge-success bg-gray-100 text-gray-800 border-gray-200">
+                            <FaCheck className="mr-1" />Normal
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                      <td className="space-x-2">
                         {editing === report._id ? (
-                          <div className="space-y-3">
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Remarks</label>
+                          <div className="space-y-3 bg-white p-3 rounded-lg border border-purple-100 shadow-sm">
+                            <div className="hms-form-group mb-0">
+                              <label className="hms-form-label text-xs">Remarks</label>
                               <input
                                 name="remarks"
                                 value={editForm.remarks}
                                 onChange={handleEditChange}
                                 placeholder="Enter remarks"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                                className="hms-form-input py-1 text-sm"
                               />
                             </div>
                             <div className="flex items-center">
@@ -144,27 +140,29 @@ const LabReports = () => {
                               />
                               <label className="ml-2 text-sm text-gray-700">Mark as critical</label>
                             </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-700 mb-1">Update Report File</label>
-                              <input
-                                type="file"
-                                onChange={handleEditFile}
-                                accept=".pdf,.jpg,.png"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
-                              />
+                            <div className="hms-form-group mb-0">
+                              <label className="hms-form-label text-xs">Update Report File</label>
+                              <div className="relative">
+                                <input
+                                  type="file"
+                                  onChange={handleEditFile}
+                                  accept=".pdf,.jpg,.png"
+                                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
+                                />
+                              </div>
                             </div>
-                            <div className="flex space-x-2">
+                            <div className="flex space-x-2 pt-2">
                               <button
                                 onClick={saveEdit}
-                                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg transition-colors shadow-sm hover:shadow-md text-sm"
+                                className="hms-btn hms-btn-primary px-3 py-1 text-xs"
                               >
-                                <i className="fas fa-save mr-1"></i>Save
+                                <FaSave className="mr-1" />Save
                               </button>
                               <button
                                 onClick={() => setEditing(null)}
-                                className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-lg transition-colors shadow-sm hover:shadow-md text-sm"
+                                className="hms-btn bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-1 text-xs"
                               >
-                                <i className="fas fa-times mr-1"></i>Cancel
+                                <FaTimes className="mr-1" />Cancel
                               </button>
                             </div>
                           </div>
@@ -172,16 +170,17 @@ const LabReports = () => {
                           <div className="flex space-x-2">
                             <button
                               onClick={() => handleEdit(report)}
-                              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                              className="hms-btn hms-btn-secondary px-3 py-1 text-xs"
                             >
-                              <i className="fas fa-edit mr-1"></i>Edit
+                              <FaEdit className="mr-1" />Edit
                             </button>
                             {report.fileUrl && (
                               <button
                                 onClick={() => downloadReport(report.fileUrl)}
-                                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                                className="hms-btn hms-btn-primary bg-green-600 hover:bg-green-700 from-green-500 to-green-600 border-none px-3 py-1 text-xs"
+                                style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}
                               >
-                                <i className="fas fa-download mr-1"></i>Download
+                                <FaDownload className="mr-1" />Download
                               </button>
                             )}
                           </div>
@@ -192,6 +191,14 @@ const LabReports = () => {
                 </tbody>
               </table>
             </div>
+            {reports.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaFileMedical className="text-3xl text-gray-300" />
+                </div>
+                <p className="text-gray-500">No lab reports found.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

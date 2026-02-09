@@ -12,7 +12,7 @@ const DoctorAnalytics = () => {
   const fetchAnalytics = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/doctor/analytics', config);
+    const res = await axios.get('/api/doctor/analytics', config);
     setAnalytics(res.data);
   };
 

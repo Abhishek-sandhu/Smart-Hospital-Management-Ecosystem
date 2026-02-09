@@ -13,7 +13,7 @@ const DoctorLabReports = () => {
   const fetchReports = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/doctor/lab-reports', config);
+    const res = await axios.get('/api/doctor/lab-reports', config);
     setReports(res.data);
   };
 
@@ -24,7 +24,7 @@ const DoctorLabReports = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.post('http://localhost:5000/api/doctor/lab-test', form, config);
+      await axios.post('/api/doctor/lab-test', form, config);
       setShowRequest(false);
       setForm({ patient: '', testName: '' });
       fetchReports();
@@ -38,7 +38,7 @@ const DoctorLabReports = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.put(`http://localhost:5000/api/doctor/lab-report/${id}/critical`, {}, config);
+      await axios.put(`/api/doctor/lab-report/${id}/critical`, {}, config);
       fetchReports();
       alert('Marked as critical');
     } catch (err) {

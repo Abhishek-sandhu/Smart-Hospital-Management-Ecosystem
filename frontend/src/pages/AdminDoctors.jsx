@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { MdPersonAdd, MdLocalHospital, MdSave, MdClose, MdPeople, MdPerson, MdEmail, MdLocalHospital as MdStethoscope, MdDateRange, MdAttachMoney, MdSettings, MdDelete } from 'react-icons/md';
+import { MdPersonAdd, MdLocalHospital, MdSave, MdClose, MdPeople, MdPerson, MdEmail, MdDateRange, MdAttachMoney, MdSettings, MdDelete } from 'react-icons/md';
+import { FaStethoscope } from 'react-icons/fa';
 
 const AdminDoctors = () => {
   const [doctors, setDoctors] = useState([]);
@@ -14,7 +15,7 @@ const AdminDoctors = () => {
   const fetchDoctors = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/admin/users', config);
+    const res = await axios.get('/api/admin/users', config);
     setDoctors(res.data.filter(u => u.role === 'doctor'));
   };
 
@@ -25,7 +26,7 @@ const AdminDoctors = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.post('http://localhost:5000/api/admin/doctor', form, config);
+      await axios.post('/api/admin/doctor', form, config);
       setShowAdd(false);
       setForm({ name: '', email: '', password: '', specialization: '', experience: '', consultationFee: '' });
       fetchDoctors();
@@ -39,7 +40,7 @@ const AdminDoctors = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.delete(`http://localhost:5000/api/admin/doctor/${id}`, config);
+      await axios.delete(`/api/admin/doctor/${id}`, config);
       fetchDoctors();
       alert('Doctor removed');
     } catch (err) {
@@ -48,84 +49,84 @@ const AdminDoctors = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-8 animate-fade-in">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Doctor Management</h1>
-          <p className="text-gray-600">Add, view, and manage healthcare professionals in the system</p>
+          <h1 className="hms-heading-primary">Doctor Management</h1>
+          <p className="hms-body-text text-gray-600">Add, view, and manage healthcare professionals in the system</p>
         </div>
 
         <div className="mb-8">
           <button
             onClick={() => setShowAdd(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+            className="hms-btn hms-btn-primary"
           >
             <MdPersonAdd className="inline mr-2" />Add New Doctor
           </button>
         </div>
 
         {showAdd && (
-          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8 mb-8">
+          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8 mb-8 animate-fade-in">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                  <MdLocalHospital className="text-white text-lg" />
+              <h2 className="hms-heading-secondary flex items-center mb-0">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                  <MdLocalHospital className="text-white text-xl" />
                 </div>
                 Add New Doctor
               </h2>
             </div>
             <form onSubmit={addDoctor} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Full Name</label>
                   <input
                     name="name"
                     value={form.name}
                     onChange={handleChange}
                     placeholder="Enter doctor's full name"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Email Address</label>
                   <input
                     name="email"
                     value={form.email}
                     onChange={handleChange}
                     placeholder="doctor@example.com"
                     type="email"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                     autoComplete="email"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Password</label>
                   <input
                     name="password"
                     value={form.password}
                     onChange={handleChange}
                     placeholder="Create a secure password"
                     type="password"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                     autoComplete="new-password"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Specialization</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Specialization</label>
                   <input
                     name="specialization"
                     value={form.specialization}
                     onChange={handleChange}
                     placeholder="e.g., Cardiology, Pediatrics"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Years of Experience</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Years of Experience</label>
                   <input
                     name="experience"
                     value={form.experience}
@@ -133,12 +134,12 @@ const AdminDoctors = () => {
                     placeholder="Years of experience"
                     type="number"
                     min="0"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Consultation Fee ($)</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Consultation Fee ($)</label>
                   <input
                     name="consultationFee"
                     value={form.consultationFee}
@@ -147,22 +148,23 @@ const AdminDoctors = () => {
                     type="number"
                     min="0"
                     step="0.01"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                   />
                 </div>
               </div>
 
-              <div className="flex space-x-4 pt-6 border-t border-gray-200">
+              <div className="flex space-x-4 pt-6 border-t border-gray-100">
                 <button
                   type="submit"
-                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                  className="hms-btn hms-btn-secondary"
                 >
                   <MdSave className="inline mr-2" />Add Doctor
                 </button>
                 <button
+                  type="button"
                   onClick={() => setShowAdd(false)}
-                  className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                  className="hms-btn bg-gray-100 text-gray-700 hover:bg-gray-200"
                 >
                   <MdClose className="inline mr-2" />Cancel
                 </button>
@@ -173,51 +175,52 @@ const AdminDoctors = () => {
 
         <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
           <div className="bg-gray-50 px-8 py-6 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-              <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-                <MdPeople className="text-white text-lg" />
+            <h2 className="hms-heading-secondary flex items-center mb-0">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                <MdPeople className="text-white text-xl" />
               </div>
               Registered Doctors
             </h2>
           </div>
 
           <div className="p-8">
-            <div className="overflow-x-auto">
-              <table className="w-full table-auto">
-                <thead className="bg-gray-50">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+              <table className="hms-table">
+                <thead>
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <MdPerson className="inline mr-2" />Name
+                    <th>
+                      <div className="flex items-center"><MdPerson className="mr-2" />Name</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <MdEmail className="inline mr-2" />Email
+                    <th>
+                      <div className="flex items-center"><MdEmail className="mr-2" />Email</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <MdStethoscope className="inline mr-2" />Specialization
+                    <th>
+                      <div className="flex items-center"><FaStethoscope className="mr-2" />Specialization</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <MdDateRange className="inline mr-2" />Experience
+                    <th>
+                      <div className="flex items-center"><MdDateRange className="mr-2" />Experience</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <MdAttachMoney className="inline mr-2" />Consultation Fee
+                    <th>
+                      <div className="flex items-center"><MdAttachMoney className="mr-2" />Consultation Fee</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <MdSettings className="inline mr-2" />Actions
+                    <th>
+                      <div className="flex items-center"><MdSettings className="mr-2" />Actions</div>
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody>
                   {doctors.map(doctor => (
-                    <tr key={doctor._id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{doctor.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{doctor.email}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{doctor.specialization}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{doctor.experience} years</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">${doctor.consultationFee}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <tr key={doctor._id} className="group hover:bg-gray-50 transition-colors">
+                      <td className="font-medium text-gray-900">{doctor.name}</td>
+                      <td className="text-gray-600">{doctor.email}</td>
+                      <td className="text-gray-600">{doctor.specialization}</td>
+                      <td className="text-gray-600">{doctor.experience} years</td>
+                      <td className="font-bold text-green-600">${doctor.consultationFee}</td>
+                      <td>
                         <button
                           onClick={() => removeDoctor(doctor._id)}
-                          className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                          className="hms-btn hms-btn-primary bg-red-600 hover:bg-red-700 from-red-500 to-red-600 border-none px-3 py-1 text-xs"
+                          style={{ background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)' }}
                         >
                           <MdDelete className="inline mr-1" />Remove
                         </button>
@@ -227,6 +230,14 @@ const AdminDoctors = () => {
                 </tbody>
               </table>
             </div>
+            {doctors.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <MdPeople className="text-3xl text-gray-300" />
+                </div>
+                <p className="text-gray-500">No doctors registered yet.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

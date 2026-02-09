@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FaIdCard, FaCalendarCheck, FaPrescriptionBottleAlt, FaMicroscope, FaFileInvoiceDollar, FaCalendarAlt, FaHeartbeat, FaStar } from 'react-icons/fa';
 
 const PatientDashboard = () => {
   const [appointments, setAppointments] = useState([]);
@@ -14,189 +15,179 @@ const PatientDashboard = () => {
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
       // Fetch user data
-      const userRes = await axios.get('http://localhost:5000/api/auth/me', config);
+      const userRes = await axios.get('/api/auth/me', config);
       setUser(userRes.data);
 
-      const appRes = await axios.get('http://localhost:5000/api/patient/appointments', config);
+      const appRes = await axios.get('/api/patient/appointments', config);
       setAppointments(appRes.data);
-      const presRes = await axios.get('http://localhost:5000/api/patient/prescriptions', config);
+      const presRes = await axios.get('/api/patient/prescriptions', config);
       setPrescriptions(presRes.data);
-      const repRes = await axios.get('http://localhost:5000/api/patient/lab-reports', config);
+      const repRes = await axios.get('/api/patient/lab-reports', config);
       setReports(repRes.data);
-      const billRes = await axios.get('http://localhost:5000/api/patient/bills', config);
+      const billRes = await axios.get('/api/patient/bills', config);
       setBills(billRes.data);
     };
     fetchData();
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Patient Dashboard</h1>
-            <p className="text-gray-600 mt-1">Welcome back! Here&apos;s your health overview</p>
-          </div>
-          {user && (
-            <div className="bg-white shadow-sm border border-gray-200 rounded-lg px-6 py-4">
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mr-4">
-                  <i className="fas fa-id-card text-white text-lg"></i>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Patient ID</p>
-                  <p className="text-lg font-semibold text-gray-900">{user.uniqueId || 'PAT001'}</p>
-                </div>
-              </div>
-            </div>
-          )}
+    <div className="space-y-8 animate-fade-in">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div>
+          <h1 className="hms-heading-primary text-3xl">Patient Dashboard</h1>
+          <p className="hms-body-text text-gray-600">Welcome back! Here&apos;s your health overview</p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mr-4">
-                <i className="fas fa-calendar-check text-white text-2xl"></i>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Appointments</p>
-                <p className="text-3xl font-bold text-gray-900">{appointments.length}</p>
-              </div>
+        {user && (
+          <div className="flex items-center gap-3 bg-blue-50 px-4 py-2 rounded-xl border border-blue-100">
+            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-600/20">
+              <FaIdCard className="text-white" />
+            </div>
+            <div>
+              <p className="text-xs text-blue-600 font-semibold uppercase tracking-wider">Patient ID</p>
+              <p className="font-mono text-gray-900 font-bold">{user.uniqueId || 'PAT001'}</p>
             </div>
           </div>
+        )}
+      </div>
 
-          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mr-4">
-                <i className="fas fa-prescription text-white text-2xl"></i>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Prescriptions</p>
-                <p className="text-3xl font-bold text-gray-900">{prescriptions.length}</p>
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="hms-stat-card group">
+          <div className="flex items-center">
+            <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+              <FaCalendarCheck />
             </div>
-          </div>
-
-          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mr-4">
-                <i className="fas fa-microscope text-white text-2xl"></i>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Lab Reports</p>
-                <p className="text-3xl font-bold text-gray-900">{reports.length}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center mr-4">
-                <i className="fas fa-dollar-sign text-white text-2xl"></i>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Bills</p>
-                <p className="text-3xl font-bold text-gray-900">{bills.length}</p>
-              </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Appointments</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">{appointments.length}</p>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-6 text-gray-900 flex items-center">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                <i className="fas fa-calendar-alt text-white"></i>
-              </div>
-              Recent Appointments
-            </h2>
-            <div className="overflow-x-auto">
-              <table className="w-full table-auto">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Doctor</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {appointments.slice(0, 5).map((app) => (
-                    <tr key={app._id} className="hover:bg-gray-50">
-                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{app.doctor?.name || 'Unknown'}</td>
-                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(app.date).toLocaleDateString()}</td>
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                          app.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                          app.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-red-100 text-red-800'
-                        }`}>
-                          {app.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        <div className="hms-stat-card group">
+          <div className="flex items-center">
+            <div className="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-green-600 group-hover:text-white transition-colors duration-300">
+              <FaPrescriptionBottleAlt />
             </div>
-          </div>
-
-          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-6 text-gray-900 flex items-center">
-              <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-                <i className="fas fa-prescription text-white"></i>
-              </div>
-              Recent Prescriptions
-            </h2>
-            <div className="space-y-4">
-              {prescriptions.slice(0, 4).map((prescription) => (
-                <div key={prescription._id} className="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:bg-gray-100 transition-colors">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-medium text-gray-900">
-                        {prescription.medicines && prescription.medicines.length > 0 ? prescription.medicines[0].name : 'No medicine'}
-                      </h3>
-                      <p className="text-sm text-gray-600">Dr. {prescription.doctor?.name || 'Unknown'}</p>
-                      <p className="text-xs text-gray-500">{new Date(prescription.date).toLocaleDateString()}</p>
-                    </div>
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
-                      {prescription.medicines && prescription.medicines.length > 0 ? prescription.medicines[0].dosage : ''}
-                    </span>
-                  </div>
-                </div>
-              ))}
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Prescriptions</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">{prescriptions.length}</p>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 bg-white shadow-sm border border-gray-200 rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-6 text-gray-900 flex items-center">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center mr-3">
-              <i className="fas fa-chart-line text-white"></i>
+        <div className="hms-stat-card group">
+          <div className="flex items-center">
+            <div className="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
+              <FaMicroscope />
             </div>
-            Health Insights
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Lab Reports</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">{reports.length}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="hms-stat-card group">
+          <div className="flex items-center">
+            <div className="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-red-600 group-hover:text-white transition-colors duration-300">
+              <FaFileInvoiceDollar />
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500 uppercase tracking-wider">Bills</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">{bills.length}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="bg-white shadow-sm border border-gray-100 rounded-2xl p-6">
+          <h2 className="hms-heading-secondary flex items-center mb-6">
+            <FaCalendarAlt className="text-blue-600 mr-2" />
+            Recent Appointments
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="fas fa-heartbeat text-2xl text-white"></i>
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <table className="hms-table">
+              <thead>
+                <tr>
+                  <th>Doctor</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {appointments.slice(0, 5).map((app) => (
+                  <tr key={app._id} className="hover:bg-gray-50 transition-colors">
+                    <td className="font-medium text-gray-900">Dr. {app.doctor?.name || 'Unknown'}</td>
+                    <td className="text-gray-600">{new Date(app.date).toLocaleDateString()}</td>
+                    <td>
+                      <span className={`hms-badge ${app.status === 'confirmed' ? 'hms-badge-success' :
+                          app.status === 'pending' ? 'hms-badge-warning' :
+                            'hms-badge-error'
+                        } capitalize`}>
+                        {app.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {appointments.length === 0 && <p className="text-center text-gray-400 py-8 italic">No recent appointments</p>}
+          </div>
+        </div>
+
+        <div className="bg-white shadow-sm border border-gray-100 rounded-2xl p-6">
+          <h2 className="hms-heading-secondary flex items-center mb-6">
+            <FaPrescriptionBottleAlt className="text-green-600 mr-2" />
+            Recent Prescriptions
+          </h2>
+          <div className="space-y-4">
+            {prescriptions.slice(0, 4).map((prescription) => (
+              <div key={prescription._id} className="group bg-gray-50 border border-gray-200 rounded-xl p-4 hover:bg-white hover:border-green-200 hover:shadow-md transition-all duration-300">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-bold text-gray-900 group-hover:text-green-600 transition-colors">
+                      {prescription.medicines && prescription.medicines.length > 0 ? prescription.medicines[0].name : 'No medicine'}
+                    </h3>
+                    <p className="text-sm text-gray-600">Dr. {prescription.doctor?.name || 'Unknown'}</p>
+                    <p className="text-xs text-gray-400 mt-1">{new Date(prescription.date).toLocaleDateString()}</p>
+                  </div>
+                  <span className="hms-badge hms-badge-info">
+                    {prescription.medicines && prescription.medicines.length > 0 ? prescription.medicines[0].dosage : ''}
+                  </span>
+                </div>
               </div>
-              <h3 className="font-medium text-gray-900 mb-2">Health Score</h3>
-              <p className="text-2xl font-bold text-gray-900">85%</p>
+            ))}
+            {prescriptions.length === 0 && <p className="text-center text-gray-400 py-8 italic">No recent prescriptions</p>}
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white shadow-sm border border-gray-100 rounded-2xl p-6">
+        <h2 className="hms-heading-secondary flex items-center mb-6">
+          <FaHeartbeat className="text-pink-500 mr-2" /> Health Insights
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="text-center p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-100">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+              <FaHeartbeat className="text-3xl text-green-500" />
             </div>
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="fas fa-calendar-check text-2xl text-white"></i>
-              </div>
-              <h3 className="font-medium text-gray-900 mb-2">Next Checkup</h3>
-              <p className="text-lg font-semibold text-gray-900">Mar 15, 2026</p>
+            <h3 className="font-semibold text-gray-900 mb-1">Health Score</h3>
+            <p className="text-3xl font-bold text-green-600">85%</p>
+          </div>
+          <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+              <FaCalendarCheck className="text-3xl text-blue-500" />
             </div>
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="fas fa-star text-2xl text-white"></i>
-              </div>
-              <h3 className="font-medium text-gray-900 mb-2">Satisfaction</h3>
-              <p className="text-2xl font-bold text-gray-900">4.8/5</p>
+            <h3 className="font-semibold text-gray-900 mb-1">Next Checkup</h3>
+            <p className="text-lg font-bold text-blue-600">Mar 15, 2026</p>
+          </div>
+          <div className="text-center p-6 bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl border border-yellow-100">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+              <FaStar className="text-3xl text-yellow-500" />
             </div>
+            <h3 className="font-semibold text-gray-900 mb-1">Satisfaction</h3>
+            <p className="text-3xl font-bold text-yellow-600">4.8/5</p>
           </div>
         </div>
       </div>

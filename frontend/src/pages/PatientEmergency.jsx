@@ -14,7 +14,7 @@ const PatientEmergency = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      const res = await axios.get('http://localhost:5000/api/patient/emergency/status', config);
+      const res = await axios.get('/api/patient/emergency/status', config);
       setEmergency(res.data);
     } catch (err) {
       // No emergency
@@ -25,7 +25,7 @@ const PatientEmergency = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      const res = await axios.post('http://localhost:5000/api/patient/emergency', { symptoms }, config);
+      const res = await axios.post('/api/patient/emergency', { symptoms }, config);
       setEmergency(res.data);
       alert('Emergency request submitted');
     } catch (err) {

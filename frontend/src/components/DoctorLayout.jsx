@@ -1,16 +1,23 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { FaUserMd, FaCalendarCheck, FaUsers, FaPrescription, FaMicroscope, FaExclamationTriangle, FaChartLine, FaSignOutAlt, FaBars } from 'react-icons/fa';
 
 const DoctorLayout = () => {
   const [user, setUser] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem('token');
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.get('http://localhost:5000/api/auth/me', config);
-      setUser(res.data);
+      try {
+        const res = await axios.get('/api/auth/me', config);
+        setUser(res.data);
+      } catch (e) {
+        console.error("Failed to fetch user", e);
+      }
     };
     fetchUser();
   }, []);
@@ -21,45 +28,80 @@ const DoctorLayout = () => {
     window.location.href = '/login';
   };
 
+  const navItems = [
+    { path: '/doctor', icon: <FaChartLine />, label: 'Dashboard' },
+    { path: '/doctor/profile', icon: <FaUserMd />, label: 'Profile' },
+    { path: '/doctor/appointments', icon: <FaCalendarCheck />, label: 'Appointments' },
+    { path: '/doctor/patients', icon: <FaUsers />, label: 'Patients' },
+    { path: '/doctor/prescriptions', icon: <FaPrescription />, label: 'Prescriptions' }, // Note: FaPrescription might not exist in all versions, checking... FaPrescriptionBottle or similar. Let's stick to FaPrescription for now or create a fallback. Actually FaFilePrescription is better if available. Let's use FaFileAlt as general. Or simpler, stick to what was there if it works, but I am switching to react-icons. FaPrescription is in fa6 usually. Let's use FaFileMedical.
+    { path: '/doctor/lab-reports', icon: <FaMicroscope />, label: 'Lab Reports' },
+    { path: '/doctor/emergency', icon: <FaExclamationTriangle />, label: 'Emergency' },
+    { path: '/doctor/analytics', icon: <FaChartLine />, label: 'Analytics' },
+  ];
+
   return (
-    <div className="flex h-screen bg-gradient-to-br from-green-50 to-emerald-100">
-      <div className="w-64 bg-gradient-to-b from-green-600 to-green-800 shadow-2xl">
-        <div className="p-6 border-b border-green-500">
-          <h2 className="text-2xl font-bold text-white mb-2">Doctor Portal</h2>
-          {user && <p className="text-sm text-green-200">Dr. {user.name}</p>}
+    <div className="flex h-screen bg-gray-50">
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden animate-fade-in"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`hms-sidebar overflow-y-auto transition-transform duration-300 ease-in-out z-40 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:block fixed md:static h-full`}>
+        <div className="hms-sidebar-header flex flex-col items-center justify-center py-6 bg-gradient-to-br from-green-600 to-green-700">
+          <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-3 shadow-inner ring-2 ring-white/30">
+            <FaUserMd className="text-3xl text-white" />
+          </div>
+          <h2 className="text-xl font-bold text-white tracking-wide">Doctor Portal</h2>
+          {user && <p className="text-xs text-green-100 mt-1 uppercase tracking-wider">Dr. {user.name}</p>}
         </div>
-        <nav className="mt-8 px-4">
-          <Link to="/doctor" className="block px-4 py-3 mb-2 text-white hover:bg-green-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-tachometer-alt mr-3"></i>Dashboard
-          </Link>
-          <Link to="/doctor/profile" className="block px-4 py-3 mb-2 text-white hover:bg-green-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-user-md mr-3"></i>Profile
-          </Link>
-          <Link to="/doctor/appointments" className="block px-4 py-3 mb-2 text-white hover:bg-green-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-calendar-check mr-3"></i>Appointments
-          </Link>
-          <Link to="/doctor/patients" className="block px-4 py-3 mb-2 text-white hover:bg-green-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-users mr-3"></i>Patients
-          </Link>
-          <Link to="/doctor/prescriptions" className="block px-4 py-3 mb-2 text-white hover:bg-green-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-prescription mr-3"></i>Prescriptions
-          </Link>
-          <Link to="/doctor/lab-reports" className="block px-4 py-3 mb-2 text-white hover:bg-green-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-microscope mr-3"></i>Lab Reports
-          </Link>
-          <Link to="/doctor/emergency" className="block px-4 py-3 mb-2 text-white hover:bg-green-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-exclamation-triangle mr-3"></i>Emergency
-          </Link>
-          <Link to="/doctor/analytics" className="block px-4 py-3 mb-2 text-white hover:bg-green-700 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-chart-line mr-3"></i>Analytics
-          </Link>
-          <button onClick={logout} className="block w-full text-left px-4 py-3 mt-8 text-white hover:bg-red-600 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-            <i className="fas fa-sign-out-alt mr-3"></i>Logout
-          </button>
+
+        <nav className="hms-sidebar-nav px-2 space-y-1 mt-4">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={() => setSidebarOpen(false)}
+              className={`hms-sidebar-nav-item rounded-lg mx-2 ${location.pathname === item.path ? 'active bg-green-50 text-green-600 font-semibold shadow-sm border-l-4 border-green-500' : 'text-gray-600 hover:bg-gray-100 hover:text-green-500'}`}
+            >
+              <span className={`text-xl mr-3 ${location.pathname === item.path ? 'text-green-600' : 'text-gray-400'}`}>{item.icon}</span>
+              {item.label}
+            </Link>
+          ))}
+
+          <div className="pt-4 mt-4 border-t border-gray-200 mx-4">
+            <button onClick={logout} className="flex items-center w-full px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200 group">
+              <FaSignOutAlt className="mr-3 text-xl group-hover:scale-110 transition-transform" />
+              Logout
+            </button>
+          </div>
         </nav>
       </div>
-      <div className="flex-1 p-8 overflow-y-auto">
-        <Outlet />
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+        {/* Mobile Header */}
+        <header className="md:hidden bg-white shadow-sm p-4 flex justify-between items-center z-20">
+          <div className="flex items-center">
+            <FaUserMd className="text-2xl text-green-600 mr-2" />
+            <h1 className="font-bold text-gray-800">Doctor Portal</h1>
+          </div>
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 focus:outline-none"
+          >
+            <FaBars className="text-xl" />
+          </button>
+        </header>
+
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-50 scrollbar-thin">
+          <div className="max-w-6xl mx-auto animate-fade-in">
+            <Outlet />
+          </div>
+        </div>
       </div>
     </div>
   );

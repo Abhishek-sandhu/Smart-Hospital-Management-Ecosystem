@@ -14,7 +14,7 @@ const AdminInventory = () => {
   const fetchMedicines = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/admin/medicines', config);
+    const res = await axios.get('/api/admin/medicines', config);
     setMedicines(res.data);
   };
 
@@ -25,7 +25,7 @@ const AdminInventory = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.post('http://localhost:5000/api/admin/medicine', form, config);
+      await axios.post('/api/admin/medicine', form, config);
       setShowAdd(false);
       setForm({ name: '', category: '', stock: '', minStock: '', expiryDate: '', supplier: '', cost: '', price: '', location: '' });
       fetchMedicines();
@@ -39,7 +39,7 @@ const AdminInventory = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.put(`http://localhost:5000/api/admin/medicine/${id}`, updates, config);
+      await axios.put(`/api/admin/medicine/${id}`, updates, config);
       fetchMedicines();
       alert('Medicine updated');
     } catch (err) {

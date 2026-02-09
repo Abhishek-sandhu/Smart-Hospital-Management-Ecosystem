@@ -13,14 +13,14 @@ const LabTests = () => {
   const fetchTests = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/lab/tests', config);
+    const res = await axios.get('/api/lab/tests', config);
     setTests(res.data);
   };
 
   const fetchDashboard = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/lab/dashboard', config);
+    const res = await axios.get('/api/lab/dashboard', config);
     setDashboard(res.data);
   };
 
@@ -28,7 +28,7 @@ const LabTests = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.put(`http://localhost:5000/api/lab/test/${id}/status`, { status }, config);
+      await axios.put(`/api/lab/test/${id}/status`, { status }, config);
       fetchTests();
       fetchDashboard();
       alert('Status updated');

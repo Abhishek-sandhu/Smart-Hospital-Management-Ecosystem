@@ -42,7 +42,7 @@ const getMedicines = async (req, res) => {
 const createBill = async (req, res) => {
   try {
     const { patient, appointment, amount, description, dueDate } = req.body;
-    
+
     // Find patient by uniqueId or _id if valid ObjectId
     let patientQuery = { role: 'patient' };
     if (require('mongoose').Types.ObjectId.isValid(patient)) {
@@ -53,19 +53,19 @@ const createBill = async (req, res) => {
     } else {
       patientQuery.uniqueId = patient;
     }
-    
+
     const patientUser = await User.findOne(patientQuery);
-    
+
     if (!patientUser) {
       return res.status(404).json({ error: 'Patient not found' });
     }
-    
-    const bill = new Bill({ 
-      patient: patientUser._id, 
-      appointment, 
-      amount, 
-      description, 
-      dueDate 
+
+    const bill = new Bill({
+      patient: patientUser._id,
+      appointment,
+      amount,
+      description,
+      dueDate
     });
     await bill.save();
     res.status(201).json(bill);
@@ -233,4 +233,28 @@ const getAnalytics = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, manageMedicineStock, getMedicines, createBill, getBills, approveInsurance, manageEmergencyQueue, createDoctor, deleteDoctor, createLabStaff, deleteLabStaff, getProfile, updateProfile, getAuditLogs, getAnalytics };
+const getInsurances = async (req, res) => {
+  try {
+    const insurances = await Insurance.find().populate('patient', 'name email uniqueId');
+    res.json(insurances);
+  } catch (error) {
+    console.error('Error getting insurances:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+const updateBillStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const bill = await Bill.findByIdAndUpdate(req.params.id, { status }, { new: true });
+    if (!bill) {
+      return res.status(404).json({ error: 'Bill not found' });
+    }
+    res.json(bill);
+  } catch (error) {
+    console.error('Error updating bill status:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+module.exports = { getUsers, manageMedicineStock, getMedicines, createBill, getBills, updateBillStatus, approveInsurance, getInsurances, manageEmergencyQueue, createDoctor, deleteDoctor, createLabStaff, deleteLabStaff, getProfile, updateProfile, getAuditLogs, getAnalytics };

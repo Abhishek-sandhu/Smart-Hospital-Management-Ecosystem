@@ -16,7 +16,7 @@ const AdminSettings = () => {
   const fetchProfile = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/admin/profile', config);
+    const res = await axios.get('/api/admin/profile', config);
     setUser(res.data);
     setForm(res.data);
   };
@@ -24,7 +24,7 @@ const AdminSettings = () => {
   const fetchLogs = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/admin/audit-logs', config);
+    const res = await axios.get('/api/admin/audit-logs', config);
     setLogs(res.data);
   };
 
@@ -35,7 +35,7 @@ const AdminSettings = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      const res = await axios.put('http://localhost:5000/api/admin/profile', form, config);
+      const res = await axios.put('/api/admin/profile', form, config);
       setUser(res.data);
       setEditing(false);
       alert('Profile updated');
@@ -45,17 +45,17 @@ const AdminSettings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-8 animate-fade-in">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Settings & Security</h1>
-          <p className="text-gray-600">Manage your profile and view system audit logs</p>
+          <h1 className="hms-heading-primary">Settings & Security</h1>
+          <p className="hms-body-text text-gray-600">Manage your profile and view system audit logs</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+              <h2 className="hms-heading-secondary flex items-center mb-0">
                 <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
                   <MdAdminPanelSettings className="text-white text-lg" />
                 </div>
@@ -65,50 +65,51 @@ const AdminSettings = () => {
 
             {editing ? (
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Full Name</label>
                   <input
                     name="name"
                     value={form.name || ''}
                     onChange={handleChange}
                     placeholder="Enter your full name"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Email Address</label>
                   <input
                     name="email"
                     value={form.email || ''}
                     onChange={handleChange}
                     placeholder="your.email@example.com"
                     type="email"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Phone Number</label>
                   <input
                     name="phone"
                     value={form.phone || ''}
                     onChange={handleChange}
                     placeholder="+1 (555) 123-4567"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="hms-form-input"
                   />
                 </div>
 
-                <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                <div className="flex space-x-4 pt-6 border-t border-gray-100">
                   <button
                     type="submit"
-                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                    className="hms-btn hms-btn-secondary"
                   >
                     <MdSave className="inline mr-2" />Save Changes
                   </button>
                   <button
+                    type="button"
                     onClick={() => setEditing(false)}
-                    className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                    className="hms-btn bg-gray-100 text-gray-700 hover:bg-gray-200"
                   >
                     <MdClose className="inline mr-2" />Cancel
                   </button>
@@ -136,7 +137,7 @@ const AdminSettings = () => {
                 <div className="pt-6">
                   <button
                     onClick={() => setEditing(true)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                    className="hms-btn hms-btn-primary"
                   >
                     <MdEdit className="inline mr-2" />Edit Profile
                   </button>
@@ -147,7 +148,7 @@ const AdminSettings = () => {
 
           <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+              <h2 className="hms-heading-secondary flex items-center mb-0">
                 <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center mr-3">
                   <MdHistory className="text-white text-lg" />
                 </div>
@@ -155,7 +156,7 @@ const AdminSettings = () => {
               </h2>
             </div>
 
-            <div className="space-y-4 max-h-96 overflow-y-auto">
+            <div className="space-y-4 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
               {logs.slice(0, 10).map(log => (
                 <div key={log._id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
                   <div className="flex items-start justify-between mb-2">

@@ -14,7 +14,7 @@ const AdminLabStaff = () => {
   const fetchLabStaff = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/admin/users', config);
+    const res = await axios.get('/api/admin/users', config);
     setLabStaff(res.data.filter(u => u.role === 'lab'));
   };
 
@@ -25,7 +25,7 @@ const AdminLabStaff = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.post('http://localhost:5000/api/admin/lab-staff', form, config);
+      await axios.post('/api/admin/lab-staff', form, config);
       setShowAdd(false);
       setForm({ name: '', email: '', password: '', department: '' });
       fetchLabStaff();
@@ -39,7 +39,7 @@ const AdminLabStaff = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     try {
-      await axios.delete(`http://localhost:5000/api/admin/lab-staff/${id}`, config);
+      await axios.delete(`/api/admin/lab-staff/${id}`, config);
       fetchLabStaff();
       alert('Lab staff removed');
     } catch (err) {
@@ -48,94 +48,96 @@ const AdminLabStaff = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-8 animate-fade-in">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Lab Staff Management</h1>
-          <p className="text-gray-600">Add, view, and manage laboratory staff members in the system</p>
+          <h1 className="hms-heading-primary">Lab Staff Management</h1>
+          <p className="hms-body-text text-gray-600">Add, view, and manage laboratory staff members in the system</p>
         </div>
 
         <div className="mb-8">
           <button
             onClick={() => setShowAdd(true)}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+            className="hms-btn hms-btn-primary bg-purple-600 hover:bg-purple-700 from-purple-500 to-purple-600"
+            style={{ background: 'linear-gradient(135deg, #9333ea 0%, #7e22ce 100%)' }}
           >
             <MdPersonAdd className="inline mr-2" />Add New Lab Staff
           </button>
         </div>
 
         {showAdd && (
-          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8 mb-8">
+          <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-8 mb-8 animate-fade-in">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-                <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center mr-3">
-                  <MdScience className="text-white text-lg" />
+              <h2 className="hms-heading-secondary flex items-center mb-0">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                  <MdScience className="text-white text-xl" />
                 </div>
                 Add New Lab Staff
               </h2>
             </div>
             <form onSubmit={addLabStaff} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Full Name</label>
                   <input
                     name="name"
                     value={form.name}
                     onChange={handleChange}
                     placeholder="Enter full name"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Email Address</label>
                   <input
                     name="email"
                     value={form.email}
                     onChange={handleChange}
                     placeholder="staff@example.com"
                     type="email"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                     autoComplete="email"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Password</label>
                   <input
                     name="password"
                     value={form.password}
                     onChange={handleChange}
                     placeholder="Create a secure password"
                     type="password"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                     autoComplete="new-password"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
+                <div className="hms-form-group mb-0">
+                  <label className="hms-form-label">Department</label>
                   <input
                     name="department"
                     value={form.department}
                     onChange={handleChange}
                     placeholder="e.g., Biochemistry, Hematology"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="hms-form-input"
                     required
                   />
                 </div>
               </div>
 
-              <div className="flex space-x-4 pt-6 border-t border-gray-200">
+              <div className="flex space-x-4 pt-6 border-t border-gray-100">
                 <button
                   type="submit"
-                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                  className="hms-btn hms-btn-secondary"
                 >
                   <MdSave className="inline mr-2" />Add Lab Staff
                 </button>
                 <button
+                  type="button"
                   onClick={() => setShowAdd(false)}
-                  className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors shadow-sm hover:shadow-md font-medium"
+                  className="hms-btn bg-gray-100 text-gray-700 hover:bg-gray-200"
                 >
                   <MdClose className="inline mr-2" />Cancel
                 </button>
@@ -146,43 +148,44 @@ const AdminLabStaff = () => {
 
         <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
           <div className="bg-gray-50 px-8 py-6 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-              <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-                <MdPeople className="text-white text-lg" />
+            <h2 className="hms-heading-secondary flex items-center mb-0">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                <MdPeople className="text-white text-xl" />
               </div>
-                Laboratory Staff
+              Laboratory Staff
             </h2>
           </div>
 
           <div className="p-8">
-            <div className="overflow-x-auto">
-              <table className="w-full table-auto">
-                <thead className="bg-gray-50">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+              <table className="hms-table">
+                <thead>
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <MdPerson className="inline mr-2" />Name
+                    <th>
+                      <div className="flex items-center"><MdPerson className="mr-2" />Name</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <MdEmail className="inline mr-2" />Email
+                    <th>
+                      <div className="flex items-center"><MdEmail className="mr-2" />Email</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <MdBiotech className="inline mr-2" />Department
+                    <th>
+                      <div className="flex items-center"><MdBiotech className="mr-2" />Department</div>
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">
-                      <MdSettings className="inline mr-2" />Actions
+                    <th>
+                      <div className="flex items-center"><MdSettings className="mr-2" />Actions</div>
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody>
                   {labStaff.map(staff => (
-                    <tr key={staff._id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{staff.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{staff.email}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{staff.department}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <tr key={staff._id} className="group hover:bg-gray-50 transition-colors">
+                      <td className="font-medium text-gray-900">{staff.name}</td>
+                      <td className="text-gray-600">{staff.email}</td>
+                      <td className="text-gray-600">{staff.department}</td>
+                      <td>
                         <button
                           onClick={() => removeLabStaff(staff._id)}
-                          className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg transition-colors shadow-sm hover:shadow-md"
+                          className="hms-btn hms-btn-primary bg-red-600 hover:bg-red-700 from-red-500 to-red-600 border-none px-3 py-1 text-xs"
+                          style={{ background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)' }}
                         >
                           <MdDelete className="inline mr-1" />Remove
                         </button>
@@ -192,6 +195,14 @@ const AdminLabStaff = () => {
                 </tbody>
               </table>
             </div>
+            {labStaff.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <MdPeople className="text-3xl text-gray-300" />
+                </div>
+                <p className="text-gray-500">No lab staff registered yet.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

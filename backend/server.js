@@ -64,70 +64,52 @@ const startServer = async () => {
   app.use('/api/admin', adminRoutes);
   app.use('/api/lab', labRoutes);
 
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 5000;
 
-  // Function to find next available port
-  const findAvailablePort = (startPort) => {
-    return new Promise((resolve, reject) => {
-      const server = require('net').createServer();
-      server.listen(startPort, '127.0.0.1', () => {
-        server.close(() => resolve(startPort));
-      });
-      server.on('error', () => {
-        // Port busy, try next one
-        findAvailablePort(startPort + 1).then(resolve).catch(reject);
-      });
-    });
-  };
+  const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  });
 
-  // Find available port and start server
-  findAvailablePort(PORT).then(availablePort => {
-    const server = app.listen(availablePort, '127.0.0.1', () => {
-      console.log(`🚀 Server running on port ${availablePort}`);
-      console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-      if (availablePort !== PORT) {
-        console.log(`ℹ️  Note: Default port ${PORT} was busy, using ${availablePort} instead`);
+  // Handle nodemon restarts (SIGUSR2)
+  process.on('SIGUSR2', async () => {
+    console.log('🔄 Nodemon restart detected, closing server gracefully...');
+    server.close(async () => {
+      console.log('🛑 Server closed for nodemon restart');
+      // Only close mongoose if it was connected
+      if (mongoose.connection.readyState === 1) {
+        await mongoose.connection.close();
       }
+      process.kill(process.pid, 'SIGUSR2');
     });
+  });
 
-    // Handle nodemon restarts (SIGUSR2)
-    process.on('SIGUSR2', async () => {
-      console.log('🔄 Nodemon restart detected, closing server gracefully...');
-      server.close(async () => {
-        console.log('🛑 Server closed for nodemon restart');
+  // Graceful shutdown
+  process.on('SIGINT', async () => {
+    console.log('🛑 Received SIGINT, shutting down gracefully...');
+    server.close(async () => {
+      if (mongoose.connection.readyState === 1) {
         await mongoose.connection.close();
-        process.kill(process.pid, 'SIGUSR2');
-      });
+      }
+      process.exit(0);
     });
+  });
 
-    // Graceful shutdown
-    process.on('SIGINT', async () => {
-      console.log('🛑 Received SIGINT, shutting down gracefully...');
-      server.close(async () => {
-        await mongoose.connection.close();
-        process.exit(0);
-      });
-    });
-
-    // Handle unhandled promise rejections
-    process.on('unhandledRejection', (err, promise) => {
-      console.log(`❌ Unhandled Promise Rejection: ${err.message}`);
-      console.log('Stack:', err.stack);
-      // Close server & exit process
-      server.close(() => {
-        console.log('🛑 Server closed due to unhandled promise rejection');
-        process.exit(1);
-      });
-    });
-
-    // Handle uncaught exceptions
-    process.on('uncaughtException', (err) => {
-      console.log(`❌ Uncaught Exception: ${err.message}`);
-      console.log('Stack:', err.stack);
+  // Handle unhandled promise rejections
+  process.on('unhandledRejection', (err, promise) => {
+    console.log(`❌ Unhandled Promise Rejection: ${err.message}`);
+    console.log('Stack:', err.stack);
+    // Close server & exit process
+    server.close(() => {
+      console.log('🛑 Server closed due to unhandled promise rejection');
       process.exit(1);
     });
-  }).catch(err => {
-    console.error('❌ Failed to find available port:', err.message);
+  });
+
+  // Handle uncaught exceptions
+  process.on('uncaughtException', (err) => {
+    console.log(`❌ Uncaught Exception: ${err.message}`);
+    console.log('Stack:', err.stack);
     process.exit(1);
   });
 };

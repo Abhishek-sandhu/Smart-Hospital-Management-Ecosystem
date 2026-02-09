@@ -12,7 +12,7 @@ const PatientBilling = () => {
   const fetchBills = async () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
-    const res = await axios.get('http://localhost:5000/api/patient/bills', config);
+    const res = await axios.get('/api/patient/bills', config);
     setBills(res.data);
   };
 
@@ -20,7 +20,7 @@ const PatientBilling = () => {
     const token = localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}`, responseType: 'blob' } };
     try {
-      const res = await axios.get(`http://localhost:5000/api/patient/bill/${id}/download`, config);
+      const res = await axios.get(`/api/patient/bill/${id}/download`, config);
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement('a');
       link.href = url;

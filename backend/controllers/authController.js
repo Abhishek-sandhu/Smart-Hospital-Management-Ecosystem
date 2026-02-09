@@ -35,17 +35,13 @@ const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 8);
 
-    // Generate unique ID based on role
-    const rolePrefix = role === 'patient' ? 'PAT' : role === 'doctor' ? 'DOC' : 'LAB';
-    const count = await User.countDocuments({ role }) + 1;
-    const uniqueId = `${rolePrefix}${count.toString().padStart(3, '0')}`;
+    const hashedPassword = await bcrypt.hash(password, 8);
 
     const user = new User({
       name,
       email,
       password: hashedPassword,
       role,
-      uniqueId,
       phone,
       address,
       dateOfBirth,
@@ -68,7 +64,8 @@ const register = async (req, res) => {
       }, token
     });
   } catch (error) {
-    res.status(500).send({ error: 'Server error' });
+    console.error('Registration error details:', error);
+    res.status(500).send({ error: error.message || 'Server error during registration' });
   }
 };
 
